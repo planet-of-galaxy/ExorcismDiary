@@ -2,14 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class StateBase<T_State, U_Fsm>
-    where T_State : StateBase<T_State, U_Fsm>
-    where U_Fsm : FiniteStateMachineBase<T_State, U_Fsm>
+public abstract class StateBase<T> where T : StateBase<T>
 {
-    protected U_Fsm fsm;
+    protected FiniteStateMachineBase<T> fsm;
     protected GameObject agent;
 
-    public virtual void Init(U_Fsm fsm,  GameObject agent) {
+    public virtual void Init(FiniteStateMachineBase<T> fsm,  GameObject agent) {
         this.fsm = fsm;
         this.agent = agent;
     }

@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEditor.VersionControl.Asset;
-public class FiniteStateMachineBase<T_State,U_Fsm>
-    where T_State : StateBase<T_State, U_Fsm>
-    where U_Fsm : FiniteStateMachineBase<T_State, U_Fsm>
+public class FiniteStateMachineBase<T> where T : StateBase<T>
 {
-    public T_State current_state;
+    public T current_state;
     protected GameObject agent;
-    private Dictionary<string, T_State> states = new();
+    private Dictionary<string, T> states = new();
     private bool startUpdate = false;
 
     public FiniteStateMachineBase(GameObject agent)
@@ -17,11 +15,15 @@ public class FiniteStateMachineBase<T_State,U_Fsm>
         this.agent = agent;
         Debug.Log(this.GetType().Name);
     }
+    public void SetAgent(GameObject agent)
+    {
+        this.agent = agent;
+    }
 
-    public virtual void ChangeToState<T>() where T : T_State,new()
+    public virtual void ChangeToState<U>() where U : T,new()
     {
         // 获取目标状态的TAG
-        string TAG = typeof(T).Name;
+        string TAG = typeof(U).Name;
 
         // 如果当前状态和目标状态相同，则不进行切换
         if (current_state != null && TAG == current_state.GetType().Name)
@@ -47,8 +49,8 @@ public class FiniteStateMachineBase<T_State,U_Fsm>
         // 否则创建新的状态实例 进行初始化 并添加到状态机中
         else
         {
-            current_state = new T();
-            current_state.Init(this as U_Fsm, agent);
+            current_state = new U();
+            current_state.Init(this, agent);
             states.Add(TAG, current_state as T);
         }
 
