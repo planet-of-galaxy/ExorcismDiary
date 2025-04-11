@@ -9,7 +9,7 @@ public class CharlieController : MonoBehaviour
     public NavMeshAgent navMeshAgent;
     public float move_speed = 10;
     public float speed_scale = 1;
-    public ChairlieFsm fsm;
+    //public ChairlieFsm fsm;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,8 +18,8 @@ public class CharlieController : MonoBehaviour
         if (navMeshAgent == null)
             navMeshAgent = GetComponent<NavMeshAgent>();
 
-        fsm = new ChairlieFsm(gameObject);
-        fsm.ChangeToState<ChairlieIdleState>();
+        //fsm = new ChairlieFsm(gameObject);
+        //fsm.ChangeToState<ChairlieIdleState>();
     }
 
     // Update is called once per frame
@@ -47,7 +47,7 @@ public class CharlieController : MonoBehaviour
 
     private void OnDestroy()
     {
-        fsm?.Destory();
-        fsm = null;
+        //fsm?.Destory();
+        //fsm = null;
     }
 }
