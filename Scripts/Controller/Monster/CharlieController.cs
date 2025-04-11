@@ -18,21 +18,14 @@ public class CharlieController : MonoBehaviour
         if (navMeshAgent == null)
             navMeshAgent = GetComponent<NavMeshAgent>();
 
+        // 初始化状态机 它会自动执行Init 并切换到第一个状态
         fsm = new ChairlieFsm(gameObject);
-        fsm.ChangeToState<ChairlieIdleState>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        //navMeshAgent.SetDestination(target.position);
-        //navMeshAgent.speed = move_speed * speed_scale;
-        //animator.SetFloat("MoveSpeed", speed_scale);
-
-        //if (Vector3.Distance(transform.position,target.position) < 3)
-        //{
-        //    animator.SetTrigger("Attack");
-        //}
     }
 
     public void AttackEvent()

@@ -2,28 +2,35 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.VersionControl.Asset;
-public class FiniteStateMachineBase<T> where T : StateBase<T>
+
+/// <summary>
+/// 提供方法：
+/// ChangeToState<T>() 作用： 切换状态 管理状态的生命周期
+/// DelayInvoke(float delay, Action action) 作用：延迟调用一个委托的方法 调用者自己管理返回的协程的生命周期
+/// ChangeFloatGradually(float start, float target, Action<float> action) 作用：让一个float值逐渐变化到目标值 调用者自己管理返回的协程的生命周期
+/// StopCoroutine(Coroutine coroutine) 作用： 有加就有减 提供停止协程的方法
+/// </summary>
+/// <typeparam name="T_StateBase">该状态机管理的状态类型</typeparam>
+/// <typeparam name="U_Fsm">该状态机管理的状态机类型</typeparam>
+public class FiniteStateMachineBase<T_StateBase, U_Fsm>
+    where T_StateBase : StateBase<T_StateBase, U_Fsm>
+    where U_Fsm : FiniteStateMachineBase<T_StateBase, U_Fsm>
 {
-    public T current_state;
+    public T_StateBase current_state;
     protected GameObject agent;
-    private Dictionary<string, T> states = new();
+    private Dictionary<string, T_StateBase> states = new();
     private bool startUpdate = false;
 
+    // 参数为调用者的gameObject对象 你得告诉我 这是谁的状态机
     public FiniteStateMachineBase(GameObject agent)
     {
         this.agent = agent;
-        Debug.Log(this.GetType().Name);
-    }
-    public void SetAgent(GameObject agent)
-    {
-        this.agent = agent;
     }
 
-    public virtual void ChangeToState<U>() where U : T,new()
+    public virtual void ChangeToState<T>() where T : T_StateBase, new()
     {
         // 获取目标状态的TAG
-        string TAG = typeof(U).Name;
+        string TAG = typeof(T).Name;
 
         // 如果当前状态和目标状态相同，则不进行切换
         if (current_state != null && TAG == current_state.GetType().Name)
@@ -49,9 +56,9 @@ public class FiniteStateMachineBase<T> where T : StateBase<T>
         // 否则创建新的状态实例 进行初始化 并添加到状态机中
         else
         {
-            current_state = new U();
-            current_state.Init(this, agent);
-            states.Add(TAG, current_state as T);
+            current_state = new T();
+            current_state.Init(this as U_Fsm, agent);
+            states.Add(TAG, current_state as T_StateBase);
         }
 
         // 进入目标状态
@@ -59,19 +66,63 @@ public class FiniteStateMachineBase<T> where T : StateBase<T>
     }
 
     private void Update() {
+        // 把当前状态的Update方法放到MonoManager的Update中
         current_state?.OnStateUpdate();
     }
 
+    // 提供延迟调用一个委托的方法
+    public Coroutine DelayInvoke(float delay, Action action) {
+        // 返回一个委托
+        return MonoMgr.Instance.StartCoroutine(DelayInvokeCoroutine(delay, action));
+    }
+    // 让一个float值逐渐变化到目标值
+    public Coroutine ChangeFloatGradually(float start, float target, Action<float> action) {
+        return MonoMgr.Instance.StartCoroutine(ChangeFloatGraduallyCorouutine(start, target, action));
+    }
+
+    // 提供停止协程的方法
+    public void StopCoroutine(Coroutine coroutine)
+    {
+        if (coroutine != null)
+            MonoMgr.Instance.StopCoroutine(coroutine);
+    }
+
+    // float渐变的协程 逻辑实现
+    private IEnumerator ChangeFloatGraduallyCorouutine(float start, float target, Action<float> action) {
+        while (start != target) {
+            start = Mathf.Lerp(start, target, Time.deltaTime);
+            action?.Invoke(start);
+            yield return null;
+        }
+    }
+
+    // 延迟调用的协程 逻辑实现
+    private IEnumerator DelayInvokeCoroutine(float delay, Action action)
+    {
+        yield return new WaitForSeconds(delay);
+        action?.Invoke();
+    }
+
+    // 请优先使用此Destory方法释放资源 效率比析构函数更高
+    // 忘记了也没关系，会自动调用析构函数 但是效率会低一些
     public void Destory() {
         // 释放状态机资源
         if (startUpdate) {
-            MonoMgr.Instance.RemoveUpdate(this.Update);
             current_state.OnStateExit();
+            MonoMgr.Instance.RemoveUpdate(this.Update);
             current_state = null;
             states.Clear();
             states = null;
             agent = null;
             startUpdate = false;
         }
+    }
+
+    // 用来兜底 防止有人忘记调用Destory
+    ~FiniteStateMachineBase()
+    {
+        // 析构函数
+        Debug.Log("FiniteStateMachineBase被销毁");
+        Destory();
     }
 }
