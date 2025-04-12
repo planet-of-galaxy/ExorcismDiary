@@ -10,6 +10,8 @@ using UnityEngine.Events;
 /// 提供方法： （注意：返回协程的方法，需要调用者自己管理协程的生命周期，不要声明了却忘记Stop）
 /// DelayInvoke(float delay, Action action) 作用：延迟调用一个委托的方法 返回一个协程对象
 /// ChangeFloatGradually(float start, float target, Action<float> action) 作用：让一个float值逐渐变化到目标值 返回一个协程对象
+/// ChangeVector3Gradually(Vector3 start, Vector3 target, Action<Vector3> action) 作用：让一个Vector3值逐渐变化到目标值 返回一个协程对象
+/// ChangeQuaternionGradually(Quaternion start, Quaternion target, Action<Quaternion> action) 作用：让一个Quaternion值逐渐变化到目标值 返回一个协程对象
 /// StartRepeatingAction(float interval) 作用：每隔interval秒调用一次action 返回一个协程对象
 /// </summary>
 public class MonoMgr : SingletonMono<MonoMgr>
@@ -85,6 +87,17 @@ public class MonoMgr : SingletonMono<MonoMgr>
     {
         return StartCoroutine(ChangeFloatGraduallyCorouutine(start, target, action));
     }
+
+    // 让一个Vector3值逐渐变化到目标值
+    public Coroutine ChangeVector3Gradually(Vector3 start, Vector3 target, Action<Vector3> action)
+    {
+        return StartCoroutine(ChangeVector3GraduallyCorouutine(start, target, action));
+    }
+    // 让一个Quaternion值逐渐变化到目标值
+    public Coroutine ChangeQuaternionGradually(Quaternion start, Quaternion target, Action<Quaternion> action)
+    {
+        return StartCoroutine(ChangeQuaternionGraduallyCorouutine(start, target, action));
+    }
     // 每隔interval秒调用一次action
     public Coroutine StartRepeatingAction(float interval, Action action)
     {
@@ -96,6 +109,26 @@ public class MonoMgr : SingletonMono<MonoMgr>
         while (start != target)
         {
             start = Mathf.Lerp(start, target, Time.deltaTime);
+            action?.Invoke(start);
+            yield return null;
+        }
+    }
+    // Vector3渐变的协程 逻辑实现
+    private IEnumerator ChangeVector3GraduallyCorouutine(Vector3 start, Vector3 target, Action<Vector3> action)
+    {
+        while (start != target)
+        {
+            start = Vector3.Lerp(start, target, Time.deltaTime);
+            action?.Invoke(start);
+            yield return null;
+        }
+    }
+    // Quaternion渐变的协程 逻辑实现
+    private IEnumerator ChangeQuaternionGraduallyCorouutine(Quaternion start, Quaternion target, Action<Quaternion> action)
+    {
+        while (start != target)
+        {
+            start = Quaternion.Slerp(start, target, Time.deltaTime);
             action?.Invoke(start);
             yield return null;
         }
