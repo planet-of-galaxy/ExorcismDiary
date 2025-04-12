@@ -4,6 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+// 为没有继承MonoBehaviour的类 提供声明周期函数
+// 同时提供各种常用协程
+/// <summary>
+/// 提供方法： （注意：返回协程的方法，需要调用者自己管理协程的生命周期，不要声明了却忘记Stop）
+/// DelayInvoke(float delay, Action action) 作用：延迟调用一个委托的方法 返回一个协程对象
+/// ChangeFloatGradually(float start, float target, Action<float> action) 作用：让一个float值逐渐变化到目标值 返回一个协程对象
+/// StartRepeatingAction(float interval) 作用：每隔interval秒调用一次action 返回一个协程对象
+/// </summary>
 public class MonoMgr : SingletonMono<MonoMgr>
 {
     public event UnityAction update;
@@ -66,5 +74,45 @@ public class MonoMgr : SingletonMono<MonoMgr>
     public void RemoveOnGUI(UnityAction fun)
     {
         onGUI -= fun;
+    }
+
+    // 延迟调用一个委托的方法
+    public Coroutine DelayInvoke(float delay, Action action) {
+        return StartCoroutine(DelayInvokeCoroutine(delay, action));
+    }
+    // 让一个float值逐渐变化到目标值
+    public Coroutine ChangeFloatGradually(float start, float target, Action<float> action)
+    {
+        return StartCoroutine(ChangeFloatGraduallyCorouutine(start, target, action));
+    }
+    // 每隔interval秒调用一次action
+    public Coroutine StartRepeatingAction(float interval, Action action)
+    {
+        return StartCoroutine(RepeatingActionCoroutine(interval, action));
+    }
+    // float渐变的协程 逻辑实现
+    private IEnumerator ChangeFloatGraduallyCorouutine(float start, float target, Action<float> action)
+    {
+        while (start != target)
+        {
+            start = Mathf.Lerp(start, target, Time.deltaTime);
+            action?.Invoke(start);
+            yield return null;
+        }
+    }
+    // 延迟调用的协程 逻辑实现
+    private IEnumerator DelayInvokeCoroutine(float delay, Action action)
+    {
+        yield return new WaitForSeconds(delay);
+        action?.Invoke();
+    }
+    // 每隔interval秒调用一次action的协程 逻辑实现
+    private IEnumerator RepeatingActionCoroutine(float interval, Action action)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(interval);
+            action?.Invoke();
+        }
     }
 }
