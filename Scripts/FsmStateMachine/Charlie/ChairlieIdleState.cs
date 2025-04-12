@@ -21,12 +21,7 @@ public class ChairlieIdleState : ChairlieStateBase
 
     public override void OnStateExit()
     {
-        // 停止协程
-        if (change_state_coroutine != null)
-        {
-            if (change_state_coroutine != null)
-                fsm.StopCoroutine(change_state_coroutine);
-        }
+        // 无需停止协程 Fsm会帮我们处理
     }
 
     public override void OnStateUpdate()

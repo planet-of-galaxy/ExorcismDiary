@@ -6,8 +6,9 @@ using UnityEngine;
 /// <summary>
 /// 提供方法：
 /// ChangeToState<T>() 作用： 切换状态 管理状态的生命周期
-/// DelayInvoke(float delay, Action action) 作用：延迟调用一个委托的方法 调用者自己管理返回的协程的生命周期
-/// ChangeFloatGradually(float start, float target, Action<float> action) 作用：让一个float值逐渐变化到目标值 调用者自己管理返回的协程的生命周期
+/// 延迟方法 周期方法 逼近方法等返回值为Coroutine的方法 状态机会自动管理协程的生命周期 调用者也可以手动调用StopFsmCoroutine方法或StopAllCoroutine停止协程
+/// DelayInvoke(float delay, Action action) 作用：延迟调用一个委托的方法
+/// ChangeFloatGradually(float start, float target, Action<float> action) 作用：让一个float值逐渐变化到目标值
 /// StopCoroutine(Coroutine coroutine) 作用： 有加就有减 提供停止协程的方法
 /// </summary>
 /// <typeparam name="T_StateBase">该状态机管理的状态类型</typeparam>
@@ -18,7 +19,10 @@ public class FiniteStateMachineBase<T_StateBase, U_Fsm>
 {
     public T_StateBase current_state;
     protected GameObject agent;
+    // 状态机的状态字典
     private Dictionary<string, T_StateBase> states = new();
+    // 管理状态申请的协程 状态切换时会自动停止
+    private List<Coroutine> coroutines = new();
     private bool startUpdate = false;
 
     // 参数为调用者的gameObject对象 你得告诉我 这是谁的状态机
@@ -47,6 +51,8 @@ public class FiniteStateMachineBase<T_StateBase, U_Fsm>
 
         // 如果当前状态不为空，则先退出当前状态
         current_state?.OnStateExit();
+        // 停止所有协程
+        StopAllCoroutine();
 
         // 如果状态机中已经存在目标状态，则直接使用
         if (states.ContainsKey(TAG))
@@ -73,34 +79,63 @@ public class FiniteStateMachineBase<T_StateBase, U_Fsm>
     // 提供延迟调用一个委托的方法
     public Coroutine DelayInvoke(float delay, Action action) {
         // 返回一个委托
-        return MonoMgr.Instance.StartCoroutine(DelayInvokeCoroutine(delay, action));
+        Coroutine crtine = MonoMgr.Instance.DelayInvoke(delay, action);
+        // 把协程添加到状态机中
+        coroutines.Add(crtine);
+        return crtine;
     }
     // 让一个float值逐渐变化到目标值
     public Coroutine ChangeFloatGradually(float start, float target, Action<float> action) {
-        return MonoMgr.Instance.StartCoroutine(ChangeFloatGraduallyCorouutine(start, target, action));
+        Coroutine crtine = MonoMgr.Instance.ChangeFloatGradually(start, target, action);
+        // 把协程添加到状态机中
+        coroutines.Add(crtine);
+        return crtine;
+    }
+    // 让一个Vector3值逐渐变化到目标值
+    public Coroutine ChangeVector3Gradually(Vector3 start, Vector3 target, Action<Vector3> action)
+    {
+        Coroutine crtine = MonoMgr.Instance.ChangeVector3Gradually(start, target, action);
+        // 把协程添加到状态机中
+        coroutines.Add(crtine);
+        return crtine;
+    }
+    // 让一个Quaternion值逐渐变化到目标值
+    public Coroutine ChangeQuaternionGradually(Quaternion start, Quaternion target, Action<Quaternion> action)
+    {
+        Coroutine crtine = MonoMgr.Instance.ChangeQuaternionGradually(start, target, action);
+        // 把协程添加到状态机中
+        coroutines.Add(crtine);
+        return crtine;
+    }
+    // 提供周期调用一个委托的方法
+    public Coroutine StartRepeatingAction(float interval, Action action) {
+        Coroutine crtion = MonoMgr.Instance.StartRepeatingAction(interval, action);
+        // 把协程添加到状态机中
+        coroutines.Add(crtion);
+        return crtion;
     }
 
     // 提供停止协程的方法
-    public void StopCoroutine(Coroutine coroutine)
+    public void StopFsmCoroutine(Coroutine coroutine)
     {
-        if (coroutine != null)
-            MonoMgr.Instance.StopCoroutine(coroutine);
-    }
-
-    // float渐变的协程 逻辑实现
-    private IEnumerator ChangeFloatGraduallyCorouutine(float start, float target, Action<float> action) {
-        while (start != target) {
-            start = Mathf.Lerp(start, target, Time.deltaTime);
-            action?.Invoke(start);
-            yield return null;
+        for (int i = 0; i < coroutines.Count; i++)
+        {
+            if (coroutines[i] == coroutine)
+            {
+                MonoMgr.Instance.StopCoroutine(coroutine);
+                coroutines.RemoveAt(i);
+                break;
+            }
         }
     }
-
-    // 延迟调用的协程 逻辑实现
-    private IEnumerator DelayInvokeCoroutine(float delay, Action action)
+    // 停止所有协程
+    public void StopAllCoroutine()
     {
-        yield return new WaitForSeconds(delay);
-        action?.Invoke();
+        for (int i = 0; i < coroutines.Count; i++)
+        {
+            MonoMgr.Instance.StopCoroutine(coroutines[i]);
+        }
+        coroutines.Clear();
     }
 
     // 请优先使用此Destory方法释放资源 效率比析构函数更高
@@ -108,12 +143,11 @@ public class FiniteStateMachineBase<T_StateBase, U_Fsm>
     public void Destory() {
         // 释放状态机资源
         if (startUpdate) {
+            // 停止所有协程
+            StopAllCoroutine();
             current_state.OnStateExit();
             MonoMgr.Instance.RemoveUpdate(this.Update);
-            current_state = null;
             states.Clear();
-            states = null;
-            agent = null;
             startUpdate = false;
         }
     }

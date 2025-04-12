@@ -25,7 +25,7 @@ public class ChairlieFsm : FiniteStateMachineBase<ChairlieStateBase, ChairlieFsm
     // 逐渐变换 速度缩放 到目标值 返回一个协程对象 调用者务必管理好该协程的生命周期
     public Coroutine SetSpeedScaleGradiently(float scale)
     {
-        return MonoMgr.Instance.StartCoroutine(ChangeSpeedGradually(scale));
+        return ChangeFloatGradually(speed_scale, scale, ChangeSpeedGradually);
     }
 
     // 直接变换 速度缩放 到目标值
@@ -35,12 +35,7 @@ public class ChairlieFsm : FiniteStateMachineBase<ChairlieStateBase, ChairlieFsm
         navMeshAgent.speed = move_speed * speed_scale;
         animator.SetFloat("SpeedScale", speed_scale);
     }
-    private IEnumerator ChangeSpeedGradually(float target) {
-        float speed_scale = this.speed_scale;
-        while (speed_scale != target) {
-            speed_scale = Mathf.Lerp(speed_scale, target, Time.deltaTime);
-            SetSpeedScale(speed_scale);
-            yield return null;
-        }
+    private void ChangeSpeedGradually(float target) {
+        SetSpeedScale(target);
     }
 }

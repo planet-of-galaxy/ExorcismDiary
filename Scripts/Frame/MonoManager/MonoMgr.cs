@@ -12,7 +12,7 @@ using UnityEngine.Events;
 /// ChangeFloatGradually(float start, float target, Action<float> action) 作用：让一个float值逐渐变化到目标值 返回一个协程对象
 /// ChangeVector3Gradually(Vector3 start, Vector3 target, Action<Vector3> action) 作用：让一个Vector3值逐渐变化到目标值 返回一个协程对象
 /// ChangeQuaternionGradually(Quaternion start, Quaternion target, Action<Quaternion> action) 作用：让一个Quaternion值逐渐变化到目标值 返回一个协程对象
-/// StartRepeatingAction(float interval) 作用：每隔interval秒调用一次action 返回一个协程对象
+/// StartRepeatingAction(float interval, Action action) 作用：每隔interval秒调用一次action 返回一个协程对象
 /// </summary>
 public class MonoMgr : SingletonMono<MonoMgr>
 {
