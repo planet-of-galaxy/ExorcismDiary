@@ -22,10 +22,11 @@ public class ChairlieFsm : FiniteStateMachineBase<ChairlieStateBase, ChairlieFsm
         ChangeToState<ChairlieIdleState>();
     }
 
-    // 逐渐变换 速度缩放 到目标值 返回一个协程对象 调用者务必管理好该协程的生命周期
-    public Coroutine SetSpeedScaleGradiently(float scale)
+    // 逐渐变换 速度缩放 到目标值 返回一个协程对象
+    // 第一个参数是目标值 第二个参数是缩放速度 默认值为1
+    public Coroutine SetSpeedScaleGradiently(float scale, float scale_scale = 1)
     {
-        return ChangeFloatGradually(speed_scale, scale, ChangeSpeedGradually);
+        return ChangeFloatGradually(speed_scale, scale, ChangeSpeedGradually, scale_scale);
     }
 
     // 直接变换 速度缩放 到目标值

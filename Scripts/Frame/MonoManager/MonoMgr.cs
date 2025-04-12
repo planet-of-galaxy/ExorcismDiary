@@ -83,20 +83,20 @@ public class MonoMgr : SingletonMono<MonoMgr>
         return StartCoroutine(DelayInvokeCoroutine(delay, action));
     }
     // 让一个float值逐渐变化到目标值
-    public Coroutine ChangeFloatGradually(float start, float target, Action<float> action)
+    public Coroutine ChangeFloatGradually(float start, float target, Action<float> action, float scale = 1)
     {
-        return StartCoroutine(ChangeFloatGraduallyCorouutine(start, target, action));
+        return StartCoroutine(ChangeFloatGraduallyCorouutine(start, target, action, scale));
     }
 
     // 让一个Vector3值逐渐变化到目标值
-    public Coroutine ChangeVector3Gradually(Vector3 start, Vector3 target, Action<Vector3> action)
+    public Coroutine ChangeVector3Gradually(Vector3 start, Vector3 target, Action<Vector3> action, float scale = 1)
     {
-        return StartCoroutine(ChangeVector3GraduallyCorouutine(start, target, action));
+        return StartCoroutine(ChangeVector3GraduallyCorouutine(start, target, action, scale));
     }
     // 让一个Quaternion值逐渐变化到目标值
-    public Coroutine ChangeQuaternionGradually(Quaternion start, Quaternion target, Action<Quaternion> action)
+    public Coroutine ChangeQuaternionGradually(Quaternion start, Quaternion target, Action<Quaternion> action, float scale = 1)
     {
-        return StartCoroutine(ChangeQuaternionGraduallyCorouutine(start, target, action));
+        return StartCoroutine(ChangeQuaternionGraduallyCorouutine(start, target, action, scale));
     }
     // 每隔interval秒调用一次action
     public Coroutine StartRepeatingAction(float interval, Action action)
@@ -104,17 +104,17 @@ public class MonoMgr : SingletonMono<MonoMgr>
         return StartCoroutine(RepeatingActionCoroutine(interval, action));
     }
     // float渐变的协程 逻辑实现
-    private IEnumerator ChangeFloatGraduallyCorouutine(float start, float target, Action<float> action)
+    private IEnumerator ChangeFloatGraduallyCorouutine(float start, float target, Action<float> action, float scale)
     {
         while (start != target)
         {
-            start = Mathf.Lerp(start, target, Time.deltaTime);
+            start = Mathf.Lerp(start, target, Time.deltaTime * scale);
             action?.Invoke(start);
             yield return null;
         }
     }
     // Vector3渐变的协程 逻辑实现
-    private IEnumerator ChangeVector3GraduallyCorouutine(Vector3 start, Vector3 target, Action<Vector3> action)
+    private IEnumerator ChangeVector3GraduallyCorouutine(Vector3 start, Vector3 target, Action<Vector3> action, float scale)
     {
         while (start != target)
         {
@@ -124,7 +124,7 @@ public class MonoMgr : SingletonMono<MonoMgr>
         }
     }
     // Quaternion渐变的协程 逻辑实现
-    private IEnumerator ChangeQuaternionGraduallyCorouutine(Quaternion start, Quaternion target, Action<Quaternion> action)
+    private IEnumerator ChangeQuaternionGraduallyCorouutine(Quaternion start, Quaternion target, Action<Quaternion> action, float scale)
     {
         while (start != target)
         {

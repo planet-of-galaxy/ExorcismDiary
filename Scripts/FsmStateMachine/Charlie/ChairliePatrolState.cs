@@ -29,6 +29,7 @@ public class ChairliePatrolState : ChairlieStateBase
         prepare_to_change = false;
         // 使用SetSpeedScaleGradiently设置速度缩放 缩放会逐渐扩大到0.6 而不是一瞬间变成0.6 这样看起来更自然
         // 动画状态机的speed_scale和navMeshAgent的speed都会在这个协程中被设置 所以我们只需管理好这个协程的生命周期即可
+        // 第二个参数是缩放速度 默认值为1 缩放值越大，速度变化越快
         change_speed_coroutine = fsm.SetSpeedScaleGradiently(0.6f);
 
         // 设置新的巡逻点
@@ -60,7 +61,7 @@ public class ChairliePatrolState : ChairlieStateBase
                 change_speed_coroutine = null;
             }
             // 慢慢停下来
-            change_speed_coroutine = fsm.SetSpeedScaleGradiently(0f);
+            change_speed_coroutine = fsm.SetSpeedScaleGradiently(0f, 5f);
             change_state_coroutine = fsm.DelayInvoke(1f, () =>
             {
                 // 指定秒后切换到Idle状态

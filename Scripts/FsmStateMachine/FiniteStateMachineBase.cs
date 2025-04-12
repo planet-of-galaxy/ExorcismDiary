@@ -85,24 +85,24 @@ public class FiniteStateMachineBase<T_StateBase, U_Fsm>
         return crtine;
     }
     // 让一个float值逐渐变化到目标值
-    public Coroutine ChangeFloatGradually(float start, float target, Action<float> action) {
-        Coroutine crtine = MonoMgr.Instance.ChangeFloatGradually(start, target, action);
+    public Coroutine ChangeFloatGradually(float start, float target, Action<float> action, float scale = 1) {
+        Coroutine crtine = MonoMgr.Instance.ChangeFloatGradually(start, target, action, scale);
         // 把协程添加到状态机中
         coroutines.Add(crtine);
         return crtine;
     }
     // 让一个Vector3值逐渐变化到目标值
-    public Coroutine ChangeVector3Gradually(Vector3 start, Vector3 target, Action<Vector3> action)
+    public Coroutine ChangeVector3Gradually(Vector3 start, Vector3 target, Action<Vector3> action, float scale = 1)
     {
-        Coroutine crtine = MonoMgr.Instance.ChangeVector3Gradually(start, target, action);
+        Coroutine crtine = MonoMgr.Instance.ChangeVector3Gradually(start, target, action, scale);
         // 把协程添加到状态机中
         coroutines.Add(crtine);
         return crtine;
     }
     // 让一个Quaternion值逐渐变化到目标值
-    public Coroutine ChangeQuaternionGradually(Quaternion start, Quaternion target, Action<Quaternion> action)
+    public Coroutine ChangeQuaternionGradually(Quaternion start, Quaternion target, Action<Quaternion> action, float scale = 1)
     {
-        Coroutine crtine = MonoMgr.Instance.ChangeQuaternionGradually(start, target, action);
+        Coroutine crtine = MonoMgr.Instance.ChangeQuaternionGradually(start, target, action, scale);
         // 把协程添加到状态机中
         coroutines.Add(crtine);
         return crtine;
