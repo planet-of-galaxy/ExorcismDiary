@@ -485,7 +485,7 @@ public class AudioManager : Singleton<AudioManager>
     }
 
     private void LoadClipCallBack(Music music) {
-        Debug.Log("音乐的加载状态为:" + music.audio_source.clip.loadState.ToString());
+        Debug.Log("音乐的加载状态为:" + music.audio_source.clip.loadType);
         switch (music.audio_type) {
             case E_AudioType.E_BACK_MUSIC:
                 if (IsAnyMusicPlaying()) {
