@@ -1,0 +1,22 @@
+ManifestFileVersion: 0
+CRC: 97737037
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 20196aef41b39e7f4d4c6b7341a26bb6
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9a2ca7bdbd1871f7131daf57de908e0c
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 20196aef41b39e7f4d4c6b7341a26bb6
+HashAppended: 0
+ClassTypes:
+- Class: 83
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- "Assets/ArtRes/Music/\u5F00\u573A.mp3"
+- "Assets/ArtRes/Music/\u6218\u6597.mp3"
+- "Assets/ArtRes/Music/\u7ED3\u5C3E.mp3"
+Dependencies: []

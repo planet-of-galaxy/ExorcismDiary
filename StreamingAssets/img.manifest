@@ -1,0 +1,38 @@
+ManifestFileVersion: 0
+CRC: 1098687363
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 37b8016894ba3774bb72a319fd7fde6b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 033fafe2c9f6c610c3a734393882fd4c
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 37b8016894ba3774bb72a319fd7fde6b
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 687078895
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- "Assets/ArtRes/Image/Standord/\u767D\u8272\u58A8\u75D5.png"
+- "Assets/ArtRes/Image/Standord/\u9ED1\u8FB9\u5706\u89D2\u77E9\u5F62.png"
+- "Assets/ArtRes/Image/Standord/\u767D\u8FB9\u5706\u89D2\u77E9\u5F62.png"
+- "Assets/ArtRes/Image/Standord/\u767D\u8FB9\u76F4\u7EBF.png"
+- "Assets/ArtRes/Image/Standord/\u9ED1\u8FB9\u76F4\u7EBF.png"
+- "Assets/ArtRes/Image/Standord/\u7EAF\u7070.png"
+- "Assets/ArtRes/Image/Standord/\u9759\u97F3.png"
+- "Assets/ArtRes/Image/Standord/30\u534A\u900F\u660E.png"
+- "Assets/ArtRes/Image/Standord/\u9ED1\u8272\u58A8\u75D5.png"
+- "Assets/ArtRes/Image/Standord/\u516B\u5366.png"
+- "Assets/ArtRes/Image/Standord/\u767D\u8272\u53C9.png"
+- "Assets/ArtRes/Image/Standord/\u64AD\u653E.png"
+- "Assets/ArtRes/Image/Standord/\u7EAF\u767D.png"
+- "Assets/ArtRes/Image/Standord/\u767D\u8272\u5173\u95ED.png"
+- "Assets/ArtRes/Image/Standord/\u7EAF\u9ED1.png"
+Dependencies: []

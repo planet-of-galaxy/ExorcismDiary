@@ -11,6 +11,6 @@ public class BackMusicController : MonoBehaviour
         if (back_music == null)
             back_music = GetComponent<AudioSource>();
 
-        AudioManager.Instance.PlaySafely(back_music, E_AudioType.E_BACK_MUSIC);
+        AudioManager.Instance.PlaySafely("Ω·Œ≤", E_AudioType.E_BACK_MUSIC);
     }
 }

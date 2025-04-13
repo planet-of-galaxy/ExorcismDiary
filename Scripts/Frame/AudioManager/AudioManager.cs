@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.XR;
 using UnityEngine;
 public class AudioData
 {
@@ -27,13 +26,16 @@ public enum E_PlayState
     E_LOWER_GRADUALLY,
     E_PAUSE,
     E_STOP,
+    E_LOADING,
 }
 public class AudioManager : Singleton<AudioManager>
 {
     public AudioData current_audiodata;
     public const float GRADUALLY_MIN_VOLUME = 0.01f; // 渐变的最小音量 到达这个音量后就会自动停止
     private Music back_music;
-    private List<Music> musics = new();
+    private GameObject back_music_gameObject; // 背景音乐附着的游戏物体
+    private List<Music> musics = new(); // 音乐附着的游戏物体
+    private GameObject music_gameObject;
     /// <summary>
     ///  内部类 为了精确控制音乐的播放状态
     ///  audio_source： 音频源
@@ -41,15 +43,24 @@ public class AudioManager : Singleton<AudioManager>
     ///  callBack: 渐变完成时的回调函数
     /// </summary>
     private class Music {
-        public AudioSource audio_source;
+        public AudioSource audio_source; // 音源
         public Coroutine coroutine;
-        public Action<Music> callBack;
+        public Action<Music> callBack; // 协程对应的回调
         public E_PlayState play_state; // 播放状态
-        public E_AudioType audio_type;
+        public E_AudioType audio_type; // 音频类型
+        public GameObject gameObject; // 附着的游戏物体
+        public string name; // 音频名字
+        public int ID { get; }
 
         // 初始化方法 协程和回调默认为空
         public Music(AudioSource audio_source, E_AudioType audio_type)
         {
+            this.audio_source = audio_source;
+            this.audio_type = audio_type;
+        }
+        public Music(GameObject gameObject, string name, AudioSource audio_source, E_AudioType audio_type) { 
+            this.gameObject = gameObject;
+            this.name = name;
             this.audio_source = audio_source;
             this.audio_type = audio_type;
         }
@@ -81,12 +92,35 @@ public class AudioManager : Singleton<AudioManager>
             // 开启协程 让音乐渐变到0
             coroutine = MonoMgr.Instance.ChangeFloatGradually(audio_source.volume, 0, SetLowerVolume);
         }
+        public void LoadClipAsync(Action<Music> callBack) {
+            play_state = E_PlayState.E_LOADING;
+            this.callBack = callBack;
+            ABMgr.Instance.LoadResAsync<AudioClip>("music", name, LoadClipCallback);
+        }
+        public void LoadClip() {
+            audio_source.clip = ABMgr.Instance.LoadRes<AudioClip>("music", name);
+        }
+        public void LoadClipCallback(AudioClip clip) {
+            play_state = E_PlayState.E_STOP;
+            audio_source.clip = clip;
+            audio_source.Stop();
+            callBack?.Invoke(this);
+        }
+        public void Play() {
+            if (audio_source != null && audio_source.clip != null)
+                audio_source.Play();
+
+            play_state = E_PlayState.E_PLAYING;
+        }
         public void Pause() {
+            play_state = E_PlayState.E_PAUSE;
             CancelCoroutine();
             audio_source.Pause();
         }
         public void Close() {
-            Destroy();
+            play_state = E_PlayState.E_STOP;
+            audio_source.Stop();
+            CancelCoroutine();
         }
 
         // 提供方法 取消渐变
@@ -96,7 +130,6 @@ public class AudioManager : Singleton<AudioManager>
                 MonoMgr.Instance.StopCoroutine(coroutine);
                 coroutine = null;
             }
-            play_state = E_PlayState.E_PLAYING;
             callBack = null;
         }
 
@@ -134,8 +167,8 @@ public class AudioManager : Singleton<AudioManager>
         }
 
         public void Destroy() {
-            audio_source.Stop();
-            CancelCoroutine();
+            Close();
+            GameObject.Destroy(audio_source);
         }
     }
     public override void Init()
@@ -235,7 +268,7 @@ public class AudioManager : Singleton<AudioManager>
                 }
 
                 // 如果正在播放背景音乐 先停止播放
-                if (back_music != null && 
+                if (back_music != null &&
                     (back_music.play_state == E_PlayState.E_UPPER_GRADUALLY ||
                      back_music.play_state == E_PlayState.E_LOWER_GRADUALLY ||
                      back_music.play_state == E_PlayState.E_PLAYING)) {
@@ -270,6 +303,24 @@ public class AudioManager : Singleton<AudioManager>
         // 渐减并停止
         music?.GraduallyLower(MusicGraduallyLowerCallBack);
     }
+    public void StopSafely(string name)
+    {
+        Music music = null;
+        // 如果是背景音乐的话 赋值为背景音乐
+        if (back_music != null && back_music.name == name)
+        {
+            music = back_music;
+        }
+        // 如果是其他音乐的话 赋值为其他音乐
+        if (GetMusic(name) is Music exits_music)
+        {
+            music = exits_music;
+        }
+        if (music == null)
+            Debug.Log("没找到");
+        // 渐减并停止
+        music?.GraduallyLower(MusicGraduallyLowerCallBack);
+    }
 
     // 渐变音量回调 当音乐渐变到0时 该回调会删除对应音乐
     private void MusicGraduallyLowerCallBack(Music music) {
@@ -283,7 +334,7 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
     private void MusicGraduallyUpperCallBack(Music music)
-    { 
+    {
         // 渐增完成回调函数 目前没有什么好处理的
     }
     private void MusicGraduallyCloseCallBack(Music music) {
@@ -313,7 +364,7 @@ public class AudioManager : Singleton<AudioManager>
     public bool IsAnyMusicPlaying() {
         bool ret = false;
         // 渐减的音乐除外 因为它马上就要关闭了
-        for (int i = 0;i<musics.Count;i++) {
+        for (int i = 0; i < musics.Count; i++) {
             if (musics[i].play_state == E_PlayState.E_PLAYING ||
                 musics[i].play_state == E_PlayState.E_UPPER_GRADUALLY)
             { ret = true; break; }
@@ -337,6 +388,14 @@ public class AudioManager : Singleton<AudioManager>
         }
         return music;
     }
+    private Music GetMusic(string name) {
+        Music music = null;
+        for (int i = 0; i < musics.Count; i++)
+        {
+            if (musics[i].name == name) { music = musics[i]; break; }
+        }
+        return music;
+    }
 
     public AudioData GetAudioData()
     {
@@ -354,10 +413,90 @@ public class AudioManager : Singleton<AudioManager>
     public void Clear() {
         back_music?.Close();
 
-        for (int i = 0;i<musics.Count;i++) {
+        for (int i = 0; i < musics.Count; i++) {
             musics[i].Close();
         }
         back_music = null;
         musics.Clear();
+    }
+
+    public void PlaySafely(string name, E_AudioType audio_type) {
+        AudioSource audio_source;
+        Music music;
+        switch (audio_type) {
+            case E_AudioType.E_BACK_MUSIC:
+                if (back_music_gameObject == null) {
+                    back_music_gameObject = new GameObject("BackMusic");
+                }
+                // 如果背景音已经存在 且名字与参数名字相等 那么直接播放
+                if (back_music != null && back_music.name == name)
+                {
+                    audio_source = back_music.audio_source;
+                    if (IsAnyMusicPlaying())
+                    {
+                        Debug.Log("有音乐正在播放 无法播放背景音");
+                        return;
+                    }
+                    back_music.GraduallyUpper(MusicGraduallyUpperCallBack);
+                    return;
+                }
+                // 如果背景音已经存在 但是名字不一样 那么清空之前的背景音 再加载新的背景音
+                else if (back_music != null)
+                {
+                    if (back_music.name == null || back_music.name != name)
+                    {
+                        back_music.Destroy();
+                        back_music = null;
+                    }
+                    audio_source = back_music_gameObject.AddComponent<AudioSource>();
+                    music = new Music(back_music_gameObject, name, audio_source, audio_type);
+                    music.LoadClipAsync(LoadClipCallBack);
+                    back_music = music;
+                    return;
+                }
+                else {
+                    audio_source = back_music_gameObject.AddComponent<AudioSource>();
+                    music = new Music(back_music_gameObject, name, audio_source, audio_type);
+                    music.LoadClipAsync(LoadClipCallBack);
+                    back_music = music;
+                    return;
+                }
+            case E_AudioType.E_MUSIC:
+                if (music_gameObject == null)
+                {
+                    music_gameObject = new GameObject("Music");
+                }
+                if (GetMusic(name) is Music current_music) {
+                    if (back_music != null) {
+                        back_music.Close();
+                    }
+                    current_music.GraduallyUpper(MusicGraduallyUpperCallBack);
+                    return;
+                }
+                audio_source = music_gameObject.AddComponent<AudioSource>();
+                music = new Music(music_gameObject, name, audio_source, audio_type);
+                musics.Add(music);
+                music.LoadClipAsync(LoadClipCallBack);
+                break;
+        }
+    }
+
+    private void LoadClipCallBack(Music music) {
+        switch (music.audio_type) {
+            case E_AudioType.E_BACK_MUSIC:
+                if (IsAnyMusicPlaying()) {
+                    // 如果有音乐正在播放 那么就先不播放
+                    return;
+                }
+                music.GraduallyUpper(MusicGraduallyUpperCallBack);
+                break;
+            case E_AudioType.E_MUSIC:
+                if (back_music != null && (back_music.play_state == E_PlayState.E_PLAYING ||
+                    back_music.play_state == E_PlayState.E_LOWER_GRADUALLY)) {
+                    back_music.Close();
+                }
+                music.GraduallyUpper(MusicGraduallyUpperCallBack);
+                break;
+        }
     }
 }

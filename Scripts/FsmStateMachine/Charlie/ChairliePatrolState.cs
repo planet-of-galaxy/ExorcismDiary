@@ -10,12 +10,14 @@ public class ChairliePatrolState : ChairlieStateBase
     private Coroutine change_speed_coroutine;
     private Coroutine change_state_coroutine;
     private bool prepare_to_change = false;
+    private AudioSource chase_music;
 
     public override void Init(ChairlieFsm fsm, GameObject agent)
     {
         base.Init(fsm, agent);
         navMeshAgent = agent.GetComponent<NavMeshAgent>();
         patrol_point = GameObject.Find("ChairliePatrolPoint").GetComponentsInChildren<Transform>();
+        chase_music = agent.GetComponent<AudioSource>();
 
         for (int i = 0; i < patrol_point.Length; i++)
         {
@@ -35,6 +37,7 @@ public class ChairliePatrolState : ChairlieStateBase
         // 设置新的巡逻点
         Debug.Log("查理要去：" + patrol_point[current_patrol_index].name);
         navMeshAgent.SetDestination(patrol_point[current_patrol_index].position);
+        AudioManager.Instance.PlaySafely("战斗", E_AudioType.E_MUSIC);
     }
 
     public override void OnStateExit()
@@ -44,6 +47,8 @@ public class ChairliePatrolState : ChairlieStateBase
             current_patrol_index = 1;
         else
             current_patrol_index++;
+
+        AudioManager.Instance.StopSafely("战斗");
 
         // 停止协程 无需手动停止协程 Fsm会帮我们处理
     }
