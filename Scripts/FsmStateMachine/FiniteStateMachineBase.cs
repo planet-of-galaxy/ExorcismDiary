@@ -143,9 +143,9 @@ public class FiniteStateMachineBase<T_StateBase, U_Fsm>
     public void Destory() {
         // 释放状态机资源
         if (startUpdate) {
+            current_state.OnStateExit();
             // 停止所有协程
             StopAllCoroutine();
-            current_state.OnStateExit();
             MonoMgr.Instance.RemoveUpdate(this.Update);
             states.Clear();
             startUpdate = false;

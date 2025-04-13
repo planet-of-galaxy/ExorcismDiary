@@ -83,6 +83,9 @@ public class AudioManager : Singleton<AudioManager>
         // 提供方法 逐渐减小音量 完成后调用回调函数
         public void GraduallyLower(Action<Music> callBack)
         {
+            // 如果AudioSource已经被系统销毁 那么本音乐类也销毁
+            if (audio_source == null)
+                Destroy();
             // 如果正在进行音量渐变 那么取消它
             if (play_state == E_PlayState.E_UPPER_GRADUALLY || play_state == E_PlayState.E_LOWER_GRADUALLY)
                 CancelCoroutine();
@@ -103,7 +106,7 @@ public class AudioManager : Singleton<AudioManager>
         public void LoadClipCallback(AudioClip clip) {
             play_state = E_PlayState.E_STOP;
             audio_source.clip = clip;
-            audio_source.Stop();
+            audio_source.clip.LoadAudioData();
             callBack?.Invoke(this);
         }
         public void Play() {
@@ -119,7 +122,7 @@ public class AudioManager : Singleton<AudioManager>
         }
         public void Close() {
             play_state = E_PlayState.E_STOP;
-            audio_source.Stop();
+            audio_source?.Stop();
             CancelCoroutine();
         }
 
@@ -482,6 +485,7 @@ public class AudioManager : Singleton<AudioManager>
     }
 
     private void LoadClipCallBack(Music music) {
+        Debug.Log("音乐的加载状态为:" + music.audio_source.clip.loadState.ToString());
         switch (music.audio_type) {
             case E_AudioType.E_BACK_MUSIC:
                 if (IsAnyMusicPlaying()) {

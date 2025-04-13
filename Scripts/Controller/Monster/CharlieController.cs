@@ -40,7 +40,6 @@ public class CharlieController : MonoBehaviour
 
     private void OnDestroy()
     {
-        fsm?.Destory();
         fsm = null;
     }
 }
