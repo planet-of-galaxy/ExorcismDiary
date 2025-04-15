@@ -30,6 +30,11 @@ public class PlayerControllerManager : Singleton<PlayerControllerManager>
         current_controller.SetActive(true, Camera.main);
     }
 
+    public GameObject GetController()
+    {
+        return current_controller?.gameObject;
+    }
+
     public PlayerData GetPlayerData(int id)
     {
         // 先不设默认值，如果ID不存在，直接报错

@@ -215,7 +215,7 @@ public class AudioManager : Singleton<AudioManager>
     {
         return current_audiodata;
     }
-
+    [Obsolete]
     public void PlaySafely(AudioSource audio_source, E_AudioType audio_type)
     {
         switch (audio_type)
@@ -287,6 +287,7 @@ public class AudioManager : Singleton<AudioManager>
                 break;
         }
     }
+    [Obsolete]
     public void StopSafely(AudioSource audio_source)
     {
         // 会不会有人把空传进来？不管怎么样，先防一手

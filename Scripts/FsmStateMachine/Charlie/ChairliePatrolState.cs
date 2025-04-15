@@ -37,7 +37,6 @@ public class ChairliePatrolState : ChairlieStateBase
         // 设置新的巡逻点
         Debug.Log("查理要去：" + patrol_point[current_patrol_index].name);
         navMeshAgent.SetDestination(patrol_point[current_patrol_index].position);
-        AudioManager.Instance.PlaySafely("战斗", E_AudioType.E_MUSIC);
     }
 
     public override void OnStateExit()
@@ -48,13 +47,16 @@ public class ChairliePatrolState : ChairlieStateBase
         else
             current_patrol_index++;
 
-        AudioManager.Instance.StopSafely("战斗");
-
         // 停止协程 无需手动停止协程 Fsm会帮我们处理
     }
 
     public override void OnStateUpdate()
     {
+        if (FindTarget())
+        {
+            fsm.ChangeToState<ChairlieChaseState>();
+        }
+
         // 即将到达巡逻点时，先减速 再延迟切换状态 减速期间把prepare_to_change设置为true 不再继续检测是否到达巡逻点
         // 优化点： 这个减速距离最终要从配置文件中读取
         if (!prepare_to_change && Vector3.Distance(agent.transform.position, patrol_point[current_patrol_index].position) < 2)
