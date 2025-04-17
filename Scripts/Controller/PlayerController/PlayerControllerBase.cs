@@ -42,7 +42,8 @@ public abstract class PlayerControllerBase : MonoBehaviour
     public void Wound() {
         // ”Œœ∑Ω· ¯
         UIManager.Instance.ShowPanel<EndPanel>();
-        AudioManager.Instance.CloseBackMusic();
+        AudioManager.Instance.Clear();
+        MonoMgr.Instance.Clear();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }

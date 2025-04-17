@@ -18,9 +18,9 @@ public abstract class ChairlieStateBase : StateBase<ChairlieStateBase, ChairlieF
 
         if (Vector3.Distance(target, agent.transform.position) < 10) {
             cos_angle = Vector3.Dot((target - agent.transform.position).normalized, agent.transform.forward);
-            if (cos_angle > 0 && Physics.Raycast(agent.transform.position, target - agent.transform.position, out hitInfo, 20);) {
+            if (cos_angle > 0 && Physics.Raycast(agent.transform.position, target - agent.transform.position, out hitInfo, 20)) {
                 if (hitInfo.collider.tag == "Player")
-                    return true;
+                    return true; 
             }
         }
         return false;

@@ -25,6 +25,8 @@ public abstract class SingletonMono<T> : MonoBehaviour where T : SingletonMono<T
         }
     }
 
+    public static bool isInstantiated { get => instance != null;}
+
     protected virtual void Awake()
     {
         if (instance == null)

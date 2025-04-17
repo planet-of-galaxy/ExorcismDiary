@@ -23,11 +23,6 @@ public class CharlieController : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     public void AttackEvent()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position + transform.forward,1,LayerMask.GetMask("Player"));
@@ -40,6 +35,10 @@ public class CharlieController : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (MonoMgr.isInstantiated)
+        {
+            fsm.Destory();
+        }
         fsm = null;
     }
 }

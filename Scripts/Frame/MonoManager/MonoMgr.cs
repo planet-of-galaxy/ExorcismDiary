@@ -148,4 +148,11 @@ public class MonoMgr : SingletonMono<MonoMgr>
             action?.Invoke();
         }
     }
+
+    public void Clear() {
+        update = null;
+        lateUpdate = null;
+        fixUpdate = null;
+        onGUI = null;
+    }
 }
