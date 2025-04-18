@@ -11,14 +11,18 @@ public abstract class ChairlieStateBase : StateBase<ChairlieStateBase, ChairlieF
     // 寻找目标相关变量提前声明
     private Ray agentToPlayer;
     private float cos_angle;
+    private float distance;
     private RaycastHit hitInfo;
+    private LayerMask mask = ~(1 << 7); // 忽视自己这一层
     protected virtual bool FindTarget() {
         player = PlayerControllerManager.Instance.GetController();
         target = player.transform.position;
 
-        if (Vector3.Distance(target, agent.transform.position) < 10) {
+        distance = Vector3.Distance(target, agent.transform.position);
+        if (distance < 10) {
             cos_angle = Vector3.Dot((target - agent.transform.position).normalized, agent.transform.forward);
-            if (cos_angle > 0 && Physics.Raycast(agent.transform.position, target - agent.transform.position, out hitInfo, 20)) {
+            if ((cos_angle > 0 || distance < 1) && Physics.Raycast(agent.transform.position, target - agent.transform.position, out hitInfo, 20, mask)) {
+                Debug.Log(hitInfo.collider.name);
                 if (hitInfo.collider.tag == "Player")
                     return true; 
             }
