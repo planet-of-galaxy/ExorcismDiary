@@ -40,11 +40,6 @@ public abstract class PlayerControllerBase : MonoBehaviour
     }
 
     public void Wound() {
-        // ”Œœ∑Ω· ¯
-        UIManager.Instance.ShowPanel<EndPanel>();
-        AudioManager.Instance.Clear();
-        MonoMgr.Instance.Clear();
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        EventCenter.Instance.EventTrigger(E_EventType.E_Player_Dead);
     }
 }

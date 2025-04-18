@@ -25,9 +25,10 @@ public class FiniteStateMachineBase<T_StateBase, U_Fsm>
     private List<Coroutine> coroutines = new();
     private bool startUpdate = false;
 
-    // 参数为调用者的gameObject对象 你得告诉我 这是谁的状态机
+    
     public FiniteStateMachineBase(GameObject agent)
     {
+        // 参数为调用者的gameObject对象 你得告诉我 这是谁的状态机
         this.agent = agent;
     }
 

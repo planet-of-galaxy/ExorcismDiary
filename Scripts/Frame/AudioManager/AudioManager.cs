@@ -416,11 +416,10 @@ public class AudioManager : Singleton<AudioManager>
     // 过场景用 置空背景音和音乐列表
     public void Clear() {
         back_music?.Close();
-
+        back_music = null;
         for (int i = 0; i < musics.Count; i++) {
             musics[i].Close();
         }
-        back_music = null;
         musics.Clear();
     }
 

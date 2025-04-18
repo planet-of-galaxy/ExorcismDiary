@@ -13,7 +13,7 @@ public class EndPanel : UIBaseController
         {
             // ¼ÌÐøÓÎÏ·
             UIManager.Instance.RemovePanel<EndPanel>(true);
-            SceneManager.LoadScene("GameScene");
+            SceneMgr.Instance.LoadScene("GameScene");
         });
     }
 }

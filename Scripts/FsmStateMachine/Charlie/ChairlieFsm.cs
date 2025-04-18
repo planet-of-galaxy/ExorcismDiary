@@ -18,8 +18,15 @@ public class ChairlieFsm : FiniteStateMachineBase<ChairlieStateBase, ChairlieFsm
     {
         animator = agent.GetComponent<Animator>();
         navMeshAgent = agent.GetComponent<NavMeshAgent>();
+        // 监听玩家死亡的消息
+        EventCenter.Instance.Subscribe(E_EventType.E_Player_Dead, Catched);
         // 初始化状态 初始状态为Idle
         ChangeToState<ChairlieIdleState>();
+    }
+
+    private void Catched()
+    {
+        ChangeToState<ChairlieCatchState>();
     }
 
     // 逐渐变换 速度缩放 到目标值 返回一个协程对象

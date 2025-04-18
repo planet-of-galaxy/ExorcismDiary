@@ -25,6 +25,14 @@ public class PlayerMainController : PlayerControllerBase
     private float gravity = -24f;
     private float defualt_speed = -2f; // 当在地面时默认速度，确保踩空时直接下落
 
+    // 被抓住时移动到这个点
+    public Transform catched_point;
+    private Coroutine position_coroutine;
+    private Coroutine rotation_coroutine;
+
+    // 停止Update标志
+    private bool stop_update = false;
+
 
     protected override void Init()
     {
@@ -32,11 +40,15 @@ public class PlayerMainController : PlayerControllerBase
             character_controller = GetComponent<CharacterController>();
 
         PlayerControllerManager.Instance.SetController(this);
+        EventCenter.Instance.Subscribe(E_EventType.E_Player_Dead, GameOver);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (stop_update)
+            return;
+
         Move();
         Rotate();
         simulateGravity();
@@ -73,6 +85,34 @@ public class PlayerMainController : PlayerControllerBase
         else
         {
             velocity.y = defualt_speed;
+        }
+    }
+
+    private void GameOver() {
+        // 以后添加一个指定时间内匀速转换的协程
+        //position_coroutine = MonoMgr.Instance.ChangeVector3Gradually(transform.position, catched_point.position, SetPosition, 100);
+        //rotation_coroutine =  MonoMgr.Instance.ChangeQuaternionGradually(transform.rotation, catched_point.rotation, SetRotation, 100);
+        transform.position = catched_point.position;
+        transform.rotation = catched_point.rotation;
+        camera_point.localRotation = Quaternion.identity;
+        stop_update = true;
+    }
+
+    private void SetPosition(Vector3 position) {
+        transform.position = position;
+    }
+
+    private void SetRotation(Quaternion rotation) {
+        transform.rotation = rotation;
+    }
+
+    private void OnDestroy()
+    {
+        if (MonoMgr.isInstantiated) {
+            if (position_coroutine != null)
+                MonoMgr.Instance.StopCoroutine(position_coroutine);
+            if (rotation_coroutine != null)
+                MonoMgr.Instance.StopCoroutine(rotation_coroutine);
         }
     }
 }

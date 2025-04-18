@@ -80,4 +80,8 @@ public class EventCenter : Singleton<EventCenter>
     {
 
     }
+
+    public void Clear() {
+        eventCenter.Clear();
+    }
 }

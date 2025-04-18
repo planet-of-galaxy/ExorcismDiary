@@ -35,7 +35,7 @@ public class ChairlieChaseState : ChairlieStateBase
     {
 
         AudioManager.Instance.StopSafely("Õ½¶·");
-        navMeshAgent.ResetPath();
+        navMeshAgent?.ResetPath();
     }
 
     public override void OnStateUpdate()
