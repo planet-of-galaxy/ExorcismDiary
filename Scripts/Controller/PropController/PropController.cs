@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.U2D;
 
-public class PropController : MonoBehaviour
+public class PropController : MonoBehaviour, IInteractable
 {
-    public Transform ui_position;
-    public GameObject ui_gameObject;
+    public InteractableListener interactable_listner;
+    public Vector3 ui_position { get => transform.position; }
+    public string listner_name { get => gameObject.name + "_listner"; }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player") {
             print("检测到玩家进入");
-            ui_gameObject= LittleUIManager.Instance.Show(ui_position, "this", this);
+            interactable_listner = InteractableListnerManager.Instance.CreateInteractableListener(this);
         }
     }
 
@@ -21,14 +19,17 @@ public class PropController : MonoBehaviour
         if (other.tag == "Player")
         {
             print("检测到玩家离开");
-            if (ui_gameObject != null) {
-                LittleUIManager.Instance.Remove(ui_gameObject);
+            if (interactable_listner != null)
+            {
+                InteractableListnerManager.Instance.RemoveInteractableListner(interactable_listner);
+                interactable_listner = null;
             }
         }
     }
-
-    public void PickedUp() {
+    public void Interact()
+    {
         print("物品已经被拾取");
+        InteractableListnerManager.Instance.RemoveInteractableListner(interactable_listner);
         Destroy(gameObject);
     }
 }
