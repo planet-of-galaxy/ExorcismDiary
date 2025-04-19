@@ -7,7 +7,7 @@ public class CharlieController : MonoBehaviour
 {
     public Animator animator;
     public NavMeshAgent navMeshAgent;
-    public float move_speed = 8;
+    public float move_speed = 6;
     public float speed_scale = 1;
     public ChairlieFsm fsm;
     // Start is called before the first frame update

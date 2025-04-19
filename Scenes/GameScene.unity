@@ -14240,7 +14240,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491580094}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: thc3_arma
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14257,7 +14257,7 @@ GameObject:
   m_Component:
   - component: {fileID: 491585308}
   - component: {fileID: 496575072}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: hair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14273,7 +14273,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491597438}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FingT_2.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14289,7 +14289,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491608952}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing3_3.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14305,7 +14305,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491622650}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: arm_up.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14321,7 +14321,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491580988}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FingT_3.R_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14337,7 +14337,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491603898}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: shroud2.L_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14353,7 +14353,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491543874}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FingT_3.L_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14369,7 +14369,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491624780}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: hand.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14385,7 +14385,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491595790}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: shest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14401,7 +14401,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491638954}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing2_3.L_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14417,7 +14417,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491537178}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FingT_2.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14433,7 +14433,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491636316}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing3_3.L_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14449,7 +14449,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491647428}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: tail1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14465,7 +14465,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491535694}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: shoulder.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14481,7 +14481,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491543506}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing2_3.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14497,7 +14497,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491524750}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: shroud2.R_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14513,7 +14513,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491536458}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing1_2.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14529,7 +14529,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491626518}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing2_1.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14545,7 +14545,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491612140}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing3_2.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14561,7 +14561,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491596462}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing1_3.L_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14577,7 +14577,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491632778}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: elbow_IK.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14594,7 +14594,7 @@ GameObject:
   m_Component:
   - component: {fileID: 491636712}
   - component: {fileID: 496580114}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: hands
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14610,7 +14610,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491595594}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing3_2.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14626,7 +14626,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491598224}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: hand.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14642,7 +14642,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491643532}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: arm_IK.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14658,7 +14658,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491608562}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing3_1.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14675,7 +14675,7 @@ GameObject:
   m_Component:
   - component: {fileID: 491595406}
   - component: {fileID: 496681274}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14691,7 +14691,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491586154}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing1_2.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14707,7 +14707,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491545858}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: neck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14723,7 +14723,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491543718}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: jaw_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14739,7 +14739,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491636516}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: elbow_IK.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14755,7 +14755,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491548544}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing1_1.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14771,7 +14771,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491599136}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: root_bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14792,7 +14792,8 @@ GameObject:
   - component: {fileID: 515827246}
   - component: {fileID: 515827245}
   - component: {fileID: 515827247}
-  m_Layer: 0
+  - component: {fileID: 515827248}
+  m_Layer: 7
   m_Name: thc3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14808,7 +14809,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491625096}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FingT_3.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14824,7 +14825,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491579642}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing2_2.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14840,7 +14841,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491524598}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing3_3.R_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14856,7 +14857,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491606694}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: shroud2.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14872,7 +14873,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491529174}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: jaw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14888,7 +14889,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491647574}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing2_1.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14904,7 +14905,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491540022}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FingT_1.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14920,7 +14921,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491604254}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: elbow_IK.L_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14936,7 +14937,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491537568}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing2_3.R_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14952,7 +14953,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491642972}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FingT_3.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14968,7 +14969,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491635384}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: arm_bot.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14984,7 +14985,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491544410}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: arm_bot.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15000,7 +15001,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491644230}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: tail2_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15016,7 +15017,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491590364}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: shroud1.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15032,7 +15033,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491620510}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15048,7 +15049,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491520750}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing1_3.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15064,7 +15065,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491550348}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FingT_1.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15080,7 +15081,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491610452}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing1_3.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15096,7 +15097,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491604802}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: hair_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15112,7 +15113,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491647690}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: hair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15128,7 +15129,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491598424}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: shroud2.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15145,7 +15146,7 @@ GameObject:
   m_Component:
   - component: {fileID: 491546652}
   - component: {fileID: 496695852}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15161,7 +15162,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491637124}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing2_3.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15177,7 +15178,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491546676}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing3_1.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15193,7 +15194,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491624762}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: tail2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15209,7 +15210,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491594854}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: shroud1.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15225,7 +15226,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491548240}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: arm_up.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15241,7 +15242,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491650712}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing2_2.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15257,7 +15258,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491591236}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: elbow_IK.R_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15273,7 +15274,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491630724}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: arm_IK.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15289,7 +15290,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491590580}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing3_3.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15305,7 +15306,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491582828}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: shoulder.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15321,7 +15322,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491644528}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing1_1.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15337,7 +15338,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491626230}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fing1_3.R_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17324,7 +17325,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 09425a975b135b24297941940bfda90a, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.069
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -17408,6 +17409,29 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!136 &515827248
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 491369912}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1
+  m_Height: 4
+  m_Direction: 1
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!1001 &516913091
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42885,7 +42909,7 @@ GameObject:
   - component: {fileID: 1428522980}
   - component: {fileID: 1428522979}
   - component: {fileID: 1428522978}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Catch_point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42901,7 +42925,7 @@ Transform:
   m_GameObject: {fileID: 1428522976}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -0, y: 1, z: 2.14}
+  m_LocalPosition: {x: -0, y: 1, z: 2.768}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -74,7 +74,7 @@ public class ChairlieChaseState : ChairlieStateBase
         if (attack_backswing <= 0)
         {
             animator.SetTrigger("Attack");
-            attack_backswing = 2;
+            attack_backswing = 1;
         }
 
         // 看向目标
