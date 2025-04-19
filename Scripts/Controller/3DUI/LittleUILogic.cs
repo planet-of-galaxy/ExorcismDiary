@@ -7,6 +7,7 @@ public class LittleUILogic : MonoBehaviour
 {
     private Image img;
     private Camera cam;
+    public PropController father { get; set; }
     // 记录ui原始大小
     private Vector3 defualt_scale;
     // 记录ui现在大小
@@ -21,6 +22,8 @@ public class LittleUILogic : MonoBehaviour
     private float distance;
     // cam到UI的向量 用于计算角度
     private Vector3 direction;
+    // 判断物品是否可被拾取
+    private bool isCanPick = false;
 
     // Start is called before the first frame update
     void Awake()
@@ -30,12 +33,12 @@ public class LittleUILogic : MonoBehaviour
         defualt_scale = img.transform.localScale;
     }
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         SetScale();
         SetRotation();
         SetSprite();
+        LisenPickUp();
     }
 
     private void SetScale() {
@@ -59,9 +62,19 @@ public class LittleUILogic : MonoBehaviour
         if (distance < 3 && Vector3.Dot(cam.transform.forward, direction) > 0.9)
         {
             img.sprite = LittleUIManager.Instance.GetSprite("E");
+            isCanPick = true;
         }
         else {
             img.sprite = LittleUIManager.Instance.GetSprite("this");
+            isCanPick = false;
+        }
+    }
+
+    private void LisenPickUp() {
+        if (isCanPick && Input.GetKeyDown(KeyCode.E)) {
+            print("物品已被拾取！！");
+            father.PickedUp();
+            Destroy(gameObject);
         }
     }
 }

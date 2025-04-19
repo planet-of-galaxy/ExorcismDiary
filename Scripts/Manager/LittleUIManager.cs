@@ -26,7 +26,7 @@ public class LittleUIManager : Singleton<LittleUIManager>
         Debug.Log("canvas加载结果： " + canvas?.name);
     }
 
-    public GameObject Show(Transform trans, string name) {
+    public GameObject Show(Transform trans, string name, PropController father) {
         // 获得目标精灵图片
         Sprite ui_sprite = atlas.GetSprite(name);
 
@@ -46,7 +46,7 @@ public class LittleUIManager : Singleton<LittleUIManager>
             // 设置位置
             ui_gameObject.transform.position = trans.position;
             // 添加3DUI逻辑
-            ui_gameObject.AddComponent<LittleUILogic>();
+            ui_gameObject.AddComponent<LittleUILogic>().father = father;
             return ui_gameObject;
         } else {
             Debug.Log("不存在： " + name);
