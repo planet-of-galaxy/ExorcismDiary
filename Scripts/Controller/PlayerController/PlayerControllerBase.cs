@@ -33,6 +33,7 @@ public abstract class PlayerControllerBase : MonoBehaviour
             gameObject.SetActive(true);
             camera.transform.SetParent(camera_point);
             camera.transform.localPosition = Vector3.zero;
+            camera.transform.localRotation = Quaternion.identity;
         }
         else {
             camera?.transform.SetParent(null);

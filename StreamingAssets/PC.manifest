@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 4148921493
+CRC: 1496143207
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -7,4 +7,7 @@ AssetBundleManifest:
       Dependencies: {}
     Info_1:
       Name: img
+      Dependencies: {}
+    Info_2:
+      Name: 3dui
       Dependencies: {}
