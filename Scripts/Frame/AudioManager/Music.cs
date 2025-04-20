@@ -27,7 +27,7 @@ public class Music : IPlayable
     public Action<Music> callBack; // 协程对应的回调
     public Action<Music> upperCallBack; // 渐进的回调 应该由所属Manager进行处理
     public Action<Music> lowerCallBack; // 渐出的回调 应该由所属Manager进行处理
-    public Action<Music> loadClipCallBack; // 异步加载的回调 应该由所属Manager进行处理
+    public Action<IPlayable> loadClipCallBack; // 异步加载的回调 应该由所属Manager进行处理
     public E_PlayState play_state; // 播放状态
     public E_AudioType audio_type; // 音频类型
     public GameObject gameObject; // 附着的游戏物体
@@ -49,51 +49,15 @@ public class Music : IPlayable
         this.audio_source = audio_source;
         this.audio_type = audio_type;
     }
-
-    // 提供方法 逐渐增大音量 完成后调用回调函数
-    [Obsolete]
-    public void GraduallyUpper(Action<Music> callBack)
-    {
-        // 如果正在进行音量渐变 那么取消它
-        if (play_state == E_PlayState.E_UPPER_GRADUALLY || play_state == E_PlayState.E_LOWER_GRADUALLY)
-            CancelCoroutine();
-
-        // 设置当前状态为渐增
-        play_state = E_PlayState.E_UPPER_GRADUALLY;
-        upperCallBack = callBack;
-        audio_source.volume = 0;
-        audio_source.Play();
-        // 开启协程 让音乐渐变到最大
-        coroutine = MonoMgr.Instance.ChangeFloatGradually(audio_source.volume, AudioManager.Instance.GetCurrentData().music_volume, SetUpperVolume);
-    }
-
-    // 提供方法 逐渐减小音量 完成后调用回调函数
-    [Obsolete]
-    public void GraduallyLower(Action<Music> callBack)
-    {
-        // 如果AudioSource已经被系统销毁 那么本音乐类也销毁
-        if (audio_source == null)
-            Destroy();
-        // 如果正在进行音量渐变 那么取消它
-        if (play_state == E_PlayState.E_UPPER_GRADUALLY || play_state == E_PlayState.E_LOWER_GRADUALLY)
-            CancelCoroutine();
-
-        play_state = E_PlayState.E_LOWER_GRADUALLY;
-        lowerCallBack = callBack;
-        // 开启协程 让音乐渐变到0
-        coroutine = MonoMgr.Instance.ChangeFloatGradually(audio_source.volume, 0, SetLowerVolume);
-    }
-    [Obsolete]
-    public void LoadClipAsync(Action<Music> callBack)
+    public void LoadClipAsync(string ABName)
     {
         play_state = E_PlayState.E_LOADING;
-        loadClipCallBack = callBack;
-        ABMgr.Instance.LoadResAsync<AudioClip>("music", name, LoadClipCallback);
+        ABMgr.Instance.LoadResAsync<AudioClip>(ABName, name, LoadClipCallback);
     }
-    public void LoadClipAsync(string ABName, string clipName)
+    public void LoadClip(string ABName)
     {
-        play_state = E_PlayState.E_LOADING;
-        ABMgr.Instance.LoadResAsync<AudioClip>(ABName, clipName, LoadClipCallback);
+        ABMgr.Instance.LoadRes<AudioClip>(ABName, name);
+        play_state = E_PlayState.E_READY;
     }
     public void LoadClipCallback(AudioClip clip)
     {
@@ -113,7 +77,12 @@ public class Music : IPlayable
         if (audio_type == E_AudioType.E_NONE)
             return;
 
+        // 播放音乐时 关闭背景音乐
+        if (audio_type == E_AudioType.E_MUSIC)
+            AudioManager.Instance.StopBackMusic();
+
         CancelCoroutine();
+
         audio_source.volume = AudioManager.Instance.GetCurrentData().music_volume;
         audio_source.Play();
 
@@ -127,8 +96,14 @@ public class Music : IPlayable
             return;
 
         play_state = E_PlayState.E_PAUSE;
+        // 暂停音乐时 恢复背景音乐
+
         CancelCoroutine();
         audio_source.Pause();
+
+        // 最后再改变背景音乐的状态 因为我们没暂停完成的话 背景音乐是不能被恢复的
+        if (audio_type == E_AudioType.E_MUSIC)
+            AudioManager.Instance.PlayBackMusic();
     }
     // 实现停止接口
     public void Stop()
@@ -139,6 +114,10 @@ public class Music : IPlayable
         play_state = E_PlayState.E_STOP;
         CancelCoroutine();
         audio_source?.Stop();
+
+        // 最后再改变背景音乐的状态 因为我们没停止完成的话 背景音乐是不能被恢复的
+        if (audio_type == E_AudioType.E_MUSIC)
+            AudioManager.Instance.PlayBackMusic();
     }
     // 实现渐进接口
 
@@ -146,6 +125,10 @@ public class Music : IPlayable
     {
         if (audio_type == E_AudioType.E_NONE)
             return;
+
+        // 播放音乐时 关闭背景音乐
+        if (audio_type == E_AudioType.E_MUSIC)
+            AudioManager.Instance.StopBackMusic();
 
         // 如果正在进行音量渐变 那么取消它
         if (play_state == E_PlayState.E_UPPER_GRADUALLY || play_state == E_PlayState.E_LOWER_GRADUALLY)
@@ -172,6 +155,17 @@ public class Music : IPlayable
         // 开启协程 让音乐渐变到0 不过实际上音量到达最小音量（AudioManager.GRADUALLY_MIN_VOLUME）时就会自动停止
         coroutine = MonoMgr.Instance.ChangeFloatGradually(audio_source.volume, 0, SetLowerVolume);
     }
+    // 封装设置音量和静音的方法
+    public void SetVolume(float volume) {
+        CancelCoroutine();
+        if (audio_source != null)
+            audio_source.volume = volume;
+    }
+    public void SetMute(bool isMute) {
+        CancelCoroutine();
+        if (audio_source != null)
+            audio_source.mute = isMute;
+    }
     public void Clear() {
         Stop(); // 先停止播放并关闭协程
         GameObject.Destroy(audio_source); // 销毁AudioSource
@@ -183,14 +177,6 @@ public class Music : IPlayable
         audio_type = E_AudioType.E_NONE;
         gameObject = null;
         name = null;
-    }
-    // 准备删除这个方法 设置为过时
-    [Obsolete]
-    public void Close()
-    {
-        play_state = E_PlayState.E_STOP;
-        audio_source?.Stop();
-        CancelCoroutine();
     }
 
     // 提供方法 取消协程
@@ -240,11 +226,5 @@ public class Music : IPlayable
             play_state = E_PlayState.E_STOP;
             lowerCallBack?.Invoke(this);
         }
-    }
-    [Obsolete]
-    public void Destroy()
-    {
-        Close();
-        GameObject.Destroy(audio_source);
     }
 }

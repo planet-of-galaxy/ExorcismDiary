@@ -4,9 +4,9 @@ using UnityEngine;
 public class BackMusicManager : Singleton<BackMusicManager>
 {
     private Music backMusic;
-    // 渐出任务完成后 暂停or停止 用于函数回调判断
-    private bool isPuase;
+    private GameObject gameObj;
     
+    private bool isPuase; // 渐出任务完成后 暂停or停止 用于函数回调判断
     private bool isAutoPlay;// 加载结束后 是否自动播放 用于函数回调判断
     private bool isGradually; // 加载结束后 是否渐进 用于函数回调判断 只有isAutoPlay为true的话 这个字段才有效
 
@@ -41,14 +41,20 @@ public class BackMusicManager : Singleton<BackMusicManager>
         // 如果背景音乐为空或已被重置 那么创建一个新的音乐切片
         if (backMusic.play_state == E_PlayState.E_NONE) {
             if (backMusic.gameObject == null) {
-                GameObject gameObj = new GameObject(BACK_MUSIC_OBJ_NAME); // 添加一个背景音的附着物
+                if (gameObj == null)
+                    gameObj = new GameObject(BACK_MUSIC_OBJ_NAME); // 添加一个背景音的附着物
+
+                backMusic.gameObject = gameObj;
+            }
+            if (backMusic.audio_source == null) {
                 backMusic.audio_source = gameObj.AddComponent<AudioSource>(); // 添加AudioSource
+                backMusic.audio_source.loop = true; // 循环播放
             }
 
             isAutoPlay = true; // 加载完成后 自动播放
             this.isGradually = isGradually; // 设置是否渐进播放
-            backMusic.LoadClipAsync(BACK_MUSIC_AB_NAME, name);
-            backMusic.name = name;
+            backMusic.name = name; // 先设置clip名字
+            backMusic.LoadClipAsync(BACK_MUSIC_AB_NAME);
         }
     }
     // 只加载不播放
@@ -56,7 +62,8 @@ public class BackMusicManager : Singleton<BackMusicManager>
         Reset(); // 先重置现有的音乐
 
         isAutoPlay = false; // 加载完成后 不自动播放
-        backMusic.LoadClipAsync(BACK_MUSIC_AB_NAME, name);
+        backMusic.name = name;
+        backMusic.LoadClipAsync(BACK_MUSIC_AB_NAME);
         backMusic.name = name;
     }
 
@@ -93,11 +100,12 @@ public class BackMusicManager : Singleton<BackMusicManager>
     // 加载完成自动播放或渐进播放 或者 什么也不做
     // 暂时不考虑 加载完成时其他如追击音乐正在播放
     // 如果有 直接重叠播放 以后再去追加判断逻辑
-    private void LoadCallBack(Music music) {
+    private void LoadCallBack(IPlayable playable)
+    {
         if (isAutoPlay && isGradually)
-            backMusic.GraduallyUpper();
+            playable.GraduallyUpper();
         else if (isAutoPlay)
-            backMusic.Play();
+            playable.Play();
     }
     private void UpperCallBack(Music music)
     {
@@ -106,9 +114,9 @@ public class BackMusicManager : Singleton<BackMusicManager>
     private void LowerCallBack(Music music)
     {
         if (isPuase)
-            backMusic.Pause();
+            music.Pause();
         else
-            backMusic.Stop();
+            music.Stop();
     }
     /// <summary>
     /// 对于背景音乐来说
@@ -132,11 +140,12 @@ public class BackMusicManager : Singleton<BackMusicManager>
 
         GameObject.Destroy(backMusic.gameObject);
         backMusic.gameObject = null;
+        backMusic.audio_source = null;
     }
 
     // 提供更改音量和静音的方法
     public void SetVolume(float volume) =>
-        backMusic.audio_source.volume = volume;
+        backMusic.SetVolume(volume);
     public void SetMute(bool mute) =>
-        backMusic.audio_source.mute = mute;
+        backMusic.SetMute(mute);
 }

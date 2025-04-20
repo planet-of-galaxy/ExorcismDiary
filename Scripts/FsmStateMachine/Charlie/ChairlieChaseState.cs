@@ -12,6 +12,9 @@ public class ChairlieChaseState : ChairlieStateBase
 
     private float attack_backswing = 0; // 攻击后摇 可优化成从配置文件中读取 
 
+    private IPlayable chasMusic; // 控制追击音乐的接口
+    private bool isMusicLoad = false; // 记录有没有加载过音乐
+
     // 旋转相关参数提前声明
     private float rotation_speed = 90;
     private Quaternion target_quaternion;
@@ -26,15 +29,19 @@ public class ChairlieChaseState : ChairlieStateBase
         if (animator == null)
             animator = agent.GetComponent<Animator>();
 
-        AudioManager.Instance.PlaySafely("战斗", E_AudioType.E_MUSIC);
-        fsm.SetSpeedScaleGradiently(1f);
-        fsm.StartRepeatingAction(0.2f, Pursuit);
+        // 没有加载过追击音乐 那么加载一下
+        if (!isMusicLoad) {
+            AudioManager.Instance.CreateMusicAsync("战斗", LoadMusicCallBack);
+        }
+        fsm.SetSpeedScaleGradiently(0.5f); // 设置速度缩放为1 最快速度
+        fsm.StartRepeatingAction(0.2f, Pursuit); // 每0.2秒重新索一次敌
     }
 
     public override void OnStateExit()
     {
 
-        AudioManager.Instance.StopSafely("战斗");
+        if (chasMusic != null)
+            chasMusic.GraduallyLower();
         navMeshAgent?.ResetPath();
     }
 
@@ -52,6 +59,10 @@ public class ChairlieChaseState : ChairlieStateBase
         if (memory_time <= 0) {
             fsm.ChangeToState<ChairlieIdleState>();
         }
+    }
+    private void LoadMusicCallBack(IPlayable music) {
+        chasMusic = music;
+        chasMusic.GraduallyUpper(); // 直接开始播放 几乎不可能还没加载完成就已经退出追击 如果有就修改
     }
 
     private void Pursuit() {

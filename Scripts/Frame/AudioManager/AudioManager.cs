@@ -40,6 +40,7 @@ public class AudioManager : Singleton<AudioManager>
         current_audiodata.music_volume = volume;
 
         BackMusicManager.Instance.SetVolume(volume);
+        MusicManager.Instance.SetVolume(volume);
         Save();
     }
     // 调节整体音效的音量大小 并自动保存
@@ -52,8 +53,9 @@ public class AudioManager : Singleton<AudioManager>
     public void SetMusicMute(bool isMute)
     {
         current_audiodata.music_isMute = isMute;
-        // 为背景音设置
+
         BackMusicManager.Instance.SetMute(isMute);
+        MusicManager.Instance.SetMute(isMute);
         Save();
     }
 
@@ -68,38 +70,34 @@ public class AudioManager : Singleton<AudioManager>
         return current_audiodata;
     }
 
-    public void PlayBackMusic(string name) {
-        BackMusicManager.Instance.PlayBackMusic(name);
+    // 背景音相关方法
+    public void PlayBackMusic(string name, bool isGradually = true) {
+        // 如果有音乐正在播放 那么就只是加载音乐 否则直接播放
+        if (MusicManager.Instance.IsAnyMusicPlaying())
+            BackMusicManager.Instance.LoadBackMusic(name);
+        else
+            BackMusicManager.Instance.PlayBackMusic(name, isGradually);
     }
-    [Obsolete]
-    public void StopSafely(string name)
+    public void PlayBackMusic(bool isGradually = true) {
+        // 如果没有音乐正在播放 那么就播放 否则等待
+        if (!MusicManager.Instance.IsAnyMusicPlaying())
+            BackMusicManager.Instance.Play(isGradually);
+        else
+            Debug.Log("无法恢复背景 因为有音乐正在播放");
+    }
+    public void StopBackMusic(bool isGradually = true)
     {
-        Music music = null;
-        // 如果是其他音乐的话 赋值为其他音乐
-        if (GetMusic(name) is Music exits_music)
-        {
-            music = exits_music;
-        }
-        if (music == null)
-            Debug.Log("没找到");
-        // 渐减并停止
-        music?.GraduallyLower(MusicGraduallyLowerCallBack);
+        BackMusicManager.Instance.Stop(isGradually);
     }
-
-    // 渐变音量回调 当音乐渐变到0时 该回调会删除对应音乐
-    private void MusicGraduallyLowerCallBack(Music music) {
-        switch (music.audio_type) {
-            case E_AudioType.E_BACK_MUSIC:
-                break;
-            case E_AudioType.E_MUSIC:
-                // 如果有背景音 开始重新播放背景音
-                BackMusicManager.Instance.Play();
-                break;
-        }
+    // 音乐相关方法
+    public IPlayable CreateMusic(string name, GameObject gameObj = null) {
+        return MusicManager.Instance.CreateMusic(name, gameObj);
     }
-    private void MusicGraduallyUpperCallBack(Music music)
-    {
-        // 渐增完成回调函数 目前没有什么好处理的
+    public void CreateMusicAsync(string name,Action<IPlayable> callback, GameObject gameObj = null) {
+        MusicManager.Instance.CreateMusicAsyc(name,callback, gameObj);
+    }
+    public void RemoveMusic(IPlayable playable) {
+        MusicManager.Instance.RemoveMusic(playable);
     }
     public bool IsAnyMusicPlaying() {
         bool ret = false;
@@ -112,77 +110,9 @@ public class AudioManager : Singleton<AudioManager>
         }
         return ret;
     }
-
-    public bool HasMusic(AudioSource audio_source) {
-        bool ret = false;
-        for (int i = 0; i < musics.Count; i++) {
-            if (musics[i].audio_source == audio_source) { ret = true; break; }
-        }
-        return ret;
-    }
-    private Music GetMusic(string name) {
-        Music music = null;
-        for (int i = 0; i < musics.Count; i++)
-        {
-            if (musics[i].name == name) { music = musics[i]; break; }
-        }
-        return music;
-    }
-
-    public AudioData GetAudioData()
-    {
-        return current_audiodata;
-    }
-
-    public void StopBackMusic()
-    {
-        BackMusicManager.Instance.Stop();
-    }
     // 过场景用 置空背景音和音乐列表
     public void Clear() {
+        MusicManager.Instance.Clear();
         BackMusicManager.Instance.Clear();
-        for (int i = 0; i < musics.Count; i++) {
-            musics[i].Close();
-        }
-        musics.Clear();
-    }
-    [Obsolete]
-    public void PlaySafely(string name, E_AudioType audio_type) {
-        AudioSource audio_source;
-        Music music;
-        switch (audio_type) {
-            case E_AudioType.E_MUSIC:
-                if (music_gameObject == null)
-                {
-                    music_gameObject = new GameObject("Music");
-                }
-                if (GetMusic(name) is Music current_music) {
-                    BackMusicManager.Instance.Stop();
-                    current_music.GraduallyUpper(MusicGraduallyUpperCallBack);
-                    return;
-                }
-                audio_source = music_gameObject.AddComponent<AudioSource>();
-                music = new Music(music_gameObject, name, audio_source, audio_type);
-                musics.Add(music);
-                music.LoadClipAsync(LoadClipCallBack);
-                break;
-        }
-    }
-
-    private void LoadClipCallBack(Music music) {
-        Debug.Log("音乐的加载状态为:" + music.audio_source.clip.loadType);
-        switch (music.audio_type) {
-            case E_AudioType.E_BACK_MUSIC:
-                if (IsAnyMusicPlaying()) {
-                    // 如果有音乐正在播放 那么就先不播放
-                    return;
-                }
-                music.GraduallyUpper(MusicGraduallyUpperCallBack);
-                break;
-            case E_AudioType.E_MUSIC:
-                BackMusicManager.Instance.Stop();
-                music.GraduallyUpper(MusicGraduallyUpperCallBack);
-                break;
-        }
     }
 }
