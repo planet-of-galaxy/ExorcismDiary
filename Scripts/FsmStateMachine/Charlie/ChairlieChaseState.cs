@@ -33,7 +33,7 @@ public class ChairlieChaseState : ChairlieStateBase
         if (!isMusicLoad) {
             AudioManager.Instance.CreateMusicAsync("战斗", LoadMusicCallBack);
         }
-        fsm.SetSpeedScaleGradiently(0.5f); // 设置速度缩放为1 最快速度
+        fsm.SetSpeedScaleGradiently(1f); // 设置速度缩放为1 最快速度
         fsm.StartRepeatingAction(0.2f, Pursuit); // 每0.2秒重新索一次敌
     }
 

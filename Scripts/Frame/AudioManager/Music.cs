@@ -24,7 +24,6 @@ public enum E_PlayState
 public class Music : IPlayable
 {
     public AudioSource audio_source; // 音源
-    public Action<Music> callBack; // 协程对应的回调
     public Action<Music> upperCallBack; // 渐进的回调 应该由所属Manager进行处理
     public Action<Music> lowerCallBack; // 渐出的回调 应该由所属Manager进行处理
     public Action<IPlayable> loadClipCallBack; // 异步加载的回调 应该由所属Manager进行处理
@@ -169,7 +168,6 @@ public class Music : IPlayable
     public void Clear() {
         Stop(); // 先停止播放并关闭协程
         GameObject.Destroy(audio_source); // 销毁AudioSource
-        callBack = null;
         upperCallBack = null;
         lowerCallBack = null;
         loadClipCallBack = null;

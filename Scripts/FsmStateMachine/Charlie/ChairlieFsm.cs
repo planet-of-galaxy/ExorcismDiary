@@ -10,7 +10,7 @@ using UnityEngine.AI;
 /// </summary>
 public class ChairlieFsm : FiniteStateMachineBase<ChairlieStateBase, ChairlieFsm>
 {
-    public const float move_speed = 10;
+    public const float move_speed = 5;
     public float speed_scale = 0;
     private Animator animator;
     private NavMeshAgent navMeshAgent;

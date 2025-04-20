@@ -138,7 +138,7 @@ public class BackMusicManager : Singleton<BackMusicManager>
     public void Clear() {
         Reset();
 
-        GameObject.Destroy(backMusic.gameObject);
+        GameObject.Destroy(gameObj);
         backMusic.gameObject = null;
         backMusic.audio_source = null;
     }
