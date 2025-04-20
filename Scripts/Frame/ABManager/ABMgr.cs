@@ -175,7 +175,6 @@ public class ABMgr : SingletonMono<ABMgr>
     //根据泛型 异步加载资源
     public void LoadResAsync<T>(string abName, string resName, UnityAction<T> callBack) where T : Object
     {
-        Debug.Log("异步加载AB包： " + abName);
         StartCoroutine(ReallyLoadResAsync<T>(abName, resName, callBack));
     }
     private IEnumerator ReallyLoadResAsync<T>(string abName, string resName, UnityAction<T> callBack) where T : Object

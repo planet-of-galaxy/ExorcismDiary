@@ -52,4 +52,17 @@ public class UIManager : Singleton<UIManager>
         canvas = GameObject.Instantiate(Resources.Load<GameObject>("UI/Canvas"));
         GameObject.DontDestroyOnLoad(canvas);
     }
+
+    public void Clear()
+    {
+        foreach (var kvp in UIs)
+        {
+            if (kvp.Value != null && kvp.Value.gameObject != null)
+            {
+                GameObject.Destroy(kvp.Value.gameObject);
+            }
+        }
+
+        UIs.Clear();
+    }
 }

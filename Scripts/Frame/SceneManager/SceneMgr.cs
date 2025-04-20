@@ -18,6 +18,7 @@ public class SceneMgr : Singleton<SceneMgr>
         // 重置各大Manager
         AudioManager.Instance.Clear();
         EventCenter.Instance.Clear();
+        UIManager.Instance.Clear();
         MonoMgr.Instance.Clear();
     }
 }

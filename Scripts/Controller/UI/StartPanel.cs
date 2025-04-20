@@ -15,7 +15,6 @@ public class StartPanel : UIBaseController
     {
         start_btn.onClick.AddListener(() => {
             SceneMgr.Instance.LoadScene("GameScene");
-            UIManager.Instance.RemovePanel<StartPanel>(true);
         });
         continue_btn.onClick.AddListener(() =>
         {
