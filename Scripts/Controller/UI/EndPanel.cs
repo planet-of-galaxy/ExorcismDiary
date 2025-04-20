@@ -12,8 +12,8 @@ public class EndPanel : UIBaseController
         continue_btn.onClick.AddListener(() =>
         {
             // ¼ÌĞøÓÎÏ·
-            UIManager.Instance.RemovePanel<EndPanel>(true);
             SceneMgr.Instance.LoadScene("GameScene");
+            UIManager.Instance.RemovePanel<EndPanel>(true);
         });
     }
 }

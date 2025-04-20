@@ -1,0 +1,250 @@
+﻿using System;
+using UnityEngine;
+using UnityEngine.Rendering;
+// 音频类型
+public enum E_AudioType
+{
+    E_NONE = -1,
+    E_BACK_MUSIC,
+    E_MUSIC,
+    E_SOUND_EFFECT,
+}
+// 音频状态
+public enum E_PlayState
+{
+    E_NONE = -1,
+    E_PLAYING,
+    E_UPPER_GRADUALLY,
+    E_LOWER_GRADUALLY,
+    E_PAUSE,
+    E_STOP,
+    E_LOADING,
+    E_READY,
+}
+public class Music : IPlayable
+{
+    public AudioSource audio_source; // 音源
+    public Action<Music> callBack; // 协程对应的回调
+    public Action<Music> upperCallBack; // 渐进的回调 应该由所属Manager进行处理
+    public Action<Music> lowerCallBack; // 渐出的回调 应该由所属Manager进行处理
+    public Action<Music> loadClipCallBack; // 异步加载的回调 应该由所属Manager进行处理
+    public E_PlayState play_state; // 播放状态
+    public E_AudioType audio_type; // 音频类型
+    public GameObject gameObject; // 附着的游戏物体
+    public string name; // 音频名字
+
+    private Coroutine coroutine; // 音量渐变的协程
+
+    public Music() { }
+    // 初始化方法 协程和回调默认为空
+    public Music(AudioSource audio_source, E_AudioType audio_type)
+    {
+        this.audio_source = audio_source;
+        this.audio_type = audio_type;
+    }
+    public Music(GameObject gameObject, string name, AudioSource audio_source, E_AudioType audio_type)
+    {
+        this.gameObject = gameObject;
+        this.name = name;
+        this.audio_source = audio_source;
+        this.audio_type = audio_type;
+    }
+
+    // 提供方法 逐渐增大音量 完成后调用回调函数
+    [Obsolete]
+    public void GraduallyUpper(Action<Music> callBack)
+    {
+        // 如果正在进行音量渐变 那么取消它
+        if (play_state == E_PlayState.E_UPPER_GRADUALLY || play_state == E_PlayState.E_LOWER_GRADUALLY)
+            CancelCoroutine();
+
+        // 设置当前状态为渐增
+        play_state = E_PlayState.E_UPPER_GRADUALLY;
+        upperCallBack = callBack;
+        audio_source.volume = 0;
+        audio_source.Play();
+        // 开启协程 让音乐渐变到最大
+        coroutine = MonoMgr.Instance.ChangeFloatGradually(audio_source.volume, AudioManager.Instance.GetCurrentData().music_volume, SetUpperVolume);
+    }
+
+    // 提供方法 逐渐减小音量 完成后调用回调函数
+    [Obsolete]
+    public void GraduallyLower(Action<Music> callBack)
+    {
+        // 如果AudioSource已经被系统销毁 那么本音乐类也销毁
+        if (audio_source == null)
+            Destroy();
+        // 如果正在进行音量渐变 那么取消它
+        if (play_state == E_PlayState.E_UPPER_GRADUALLY || play_state == E_PlayState.E_LOWER_GRADUALLY)
+            CancelCoroutine();
+
+        play_state = E_PlayState.E_LOWER_GRADUALLY;
+        lowerCallBack = callBack;
+        // 开启协程 让音乐渐变到0
+        coroutine = MonoMgr.Instance.ChangeFloatGradually(audio_source.volume, 0, SetLowerVolume);
+    }
+    [Obsolete]
+    public void LoadClipAsync(Action<Music> callBack)
+    {
+        play_state = E_PlayState.E_LOADING;
+        loadClipCallBack = callBack;
+        ABMgr.Instance.LoadResAsync<AudioClip>("music", name, LoadClipCallback);
+    }
+    public void LoadClipAsync(string ABName, string clipName)
+    {
+        play_state = E_PlayState.E_LOADING;
+        ABMgr.Instance.LoadResAsync<AudioClip>(ABName, clipName, LoadClipCallback);
+    }
+    public void LoadClipCallback(AudioClip clip)
+    {
+        if (clip == null) {
+            Debug.Log("加载失败！！");
+            play_state = E_PlayState.E_NONE;
+            return;
+        }
+        play_state = E_PlayState.E_READY;
+        audio_source.clip = clip;
+        audio_source.clip.LoadAudioData();
+        loadClipCallBack?.Invoke(this);
+    }
+    // 实现播放接口 直接以设置音量播放
+    public void Play()
+    {
+        if (audio_type == E_AudioType.E_NONE)
+            return;
+
+        CancelCoroutine();
+        audio_source.volume = AudioManager.Instance.GetCurrentData().music_volume;
+        audio_source.Play();
+
+
+        play_state = E_PlayState.E_PLAYING;
+    }
+    // 实现暂停接口
+    public void Pause()
+    {
+        if (audio_type == E_AudioType.E_NONE)
+            return;
+
+        play_state = E_PlayState.E_PAUSE;
+        CancelCoroutine();
+        audio_source.Pause();
+    }
+    // 实现停止接口
+    public void Stop()
+    {
+        if (audio_type == E_AudioType.E_NONE)
+            return;
+
+        play_state = E_PlayState.E_STOP;
+        CancelCoroutine();
+        audio_source?.Stop();
+    }
+    // 实现渐进接口
+
+    public void GraduallyUpper()
+    {
+        if (audio_type == E_AudioType.E_NONE)
+            return;
+
+        // 如果正在进行音量渐变 那么取消它
+        if (play_state == E_PlayState.E_UPPER_GRADUALLY || play_state == E_PlayState.E_LOWER_GRADUALLY)
+            CancelCoroutine();
+
+        // 设置当前状态为渐增
+        play_state = E_PlayState.E_UPPER_GRADUALLY;
+        audio_source.volume = 0;
+        audio_source.Play();
+        // 开启协程 让音乐渐变到最大
+        coroutine = MonoMgr.Instance.ChangeFloatGradually(audio_source.volume, AudioManager.Instance.GetCurrentData().music_volume, SetUpperVolume);
+    }
+    // 实现渐出效果
+    public void GraduallyLower()
+    {
+        if (audio_type == E_AudioType.E_NONE)
+            return;
+
+        // 如果正在进行音量渐变 那么取消它
+        if (play_state == E_PlayState.E_UPPER_GRADUALLY || play_state == E_PlayState.E_LOWER_GRADUALLY)
+            CancelCoroutine();
+
+        play_state = E_PlayState.E_LOWER_GRADUALLY;
+        // 开启协程 让音乐渐变到0 不过实际上音量到达最小音量（AudioManager.GRADUALLY_MIN_VOLUME）时就会自动停止
+        coroutine = MonoMgr.Instance.ChangeFloatGradually(audio_source.volume, 0, SetLowerVolume);
+    }
+    public void Clear() {
+        Stop(); // 先停止播放并关闭协程
+        GameObject.Destroy(audio_source); // 销毁AudioSource
+        callBack = null;
+        upperCallBack = null;
+        lowerCallBack = null;
+        loadClipCallBack = null;
+        play_state = E_PlayState.E_NONE;
+        audio_type = E_AudioType.E_NONE;
+        gameObject = null;
+        name = null;
+    }
+    // 准备删除这个方法 设置为过时
+    [Obsolete]
+    public void Close()
+    {
+        play_state = E_PlayState.E_STOP;
+        audio_source?.Stop();
+        CancelCoroutine();
+    }
+
+    // 提供方法 取消协程
+    private void CancelCoroutine()
+    {
+        // 防御式编程 如果MonoMgr已被销毁(强制结束游戏时) 那么无需取消coroutine
+        if (coroutine != null && MonoMgr.isInstantiated)
+        {
+           
+            MonoMgr.Instance.StopCoroutine(coroutine);
+            coroutine = null;
+        }
+    }
+
+    private void SetUpperVolume(float volume)
+    {
+        audio_source.volume = volume;
+
+        // 当音量即将达到目标音量时，停止渐变
+        if (Mathf.Abs(AudioManager.Instance.GetCurrentData().music_volume - volume) <= AudioManager.GRADUALLY_MIN_VOLUME)
+        {
+            audio_source.volume = AudioManager.Instance.GetCurrentData().music_volume;
+            if (coroutine != null)
+            {
+                // 当音量达到时 用户正好强制结束游戏 几乎不可能 但还是判断一下
+                if (MonoMgr.isInstantiated)
+                    MonoMgr.Instance.StopCoroutine(coroutine);
+                coroutine = null;
+            }
+            play_state = E_PlayState.E_PLAYING;
+            upperCallBack?.Invoke(this);
+        }
+    }
+    private void SetLowerVolume(float volume)
+    {
+        audio_source.volume = volume;
+
+        // 当音量即将达到0时，停止渐变
+        if (volume <= AudioManager.GRADUALLY_MIN_VOLUME)
+        {
+            if (coroutine != null && MonoMgr.isInstantiated)
+            {
+                MonoMgr.Instance.StopCoroutine(coroutine);
+                coroutine = null;
+            }
+            audio_source.Stop();
+            play_state = E_PlayState.E_STOP;
+            lowerCallBack?.Invoke(this);
+        }
+    }
+    [Obsolete]
+    public void Destroy()
+    {
+        Close();
+        GameObject.Destroy(audio_source);
+    }
+}

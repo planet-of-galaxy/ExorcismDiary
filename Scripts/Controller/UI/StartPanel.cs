@@ -14,7 +14,7 @@ public class StartPanel : UIBaseController
     protected override void Init()
     {
         start_btn.onClick.AddListener(() => {
-            SceneManager.LoadScene("GameScene");
+            SceneMgr.Instance.LoadScene("GameScene");
             UIManager.Instance.RemovePanel<StartPanel>(true);
         });
         continue_btn.onClick.AddListener(() =>
