@@ -31,23 +31,10 @@ public class Music : IPlayable
     public E_AudioType audio_type; // 音频类型
     public GameObject gameObject; // 附着的游戏物体
     public string name; // 音频名字
+    public bool usePool = false; // 是否使用了对象池 默认不使用 该字段仅用于标识 逻辑需手动实现
 
     private Coroutine coroutine; // 音量渐变的协程
 
-    public Music() { }
-    // 初始化方法 协程和回调默认为空
-    public Music(AudioSource audio_source, E_AudioType audio_type)
-    {
-        this.audio_source = audio_source;
-        this.audio_type = audio_type;
-    }
-    public Music(GameObject gameObject, string name, AudioSource audio_source, E_AudioType audio_type)
-    {
-        this.gameObject = gameObject;
-        this.name = name;
-        this.audio_source = audio_source;
-        this.audio_type = audio_type;
-    }
     public void LoadClipAsync(string ABName)
     {
         play_state = E_PlayState.E_LOADING;
@@ -220,8 +207,6 @@ public class Music : IPlayable
                 MonoMgr.Instance.StopCoroutine(coroutine);
                 coroutine = null;
             }
-            audio_source.Stop();
-            play_state = E_PlayState.E_STOP;
             lowerCallBack?.Invoke(this);
         }
     }

@@ -110,9 +110,14 @@ public class AudioManager : Singleton<AudioManager>
         }
         return ret;
     }
+    // 音效相关方法
+    public void PlaySoundEffect(string path) {
+        SoundEffectManager.Instance.CreateSountEffect(path);
+    }
     // 过场景用 置空背景音和音乐列表
     public void Clear() {
         MusicManager.Instance.Clear();
         BackMusicManager.Instance.Clear();
+        SoundEffectManager.Instance.Clear();
     }
 }

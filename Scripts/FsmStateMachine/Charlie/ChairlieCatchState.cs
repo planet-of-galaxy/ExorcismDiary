@@ -11,6 +11,7 @@ public class ChairlieCatchState : ChairlieStateBase
             animator = agent.GetComponent<Animator>();
 
         animator.SetTrigger("Howl");
+        AudioManager.Instance.PlaySoundEffect("GotCaught");
         fsm.DelayInvoke(2, ShowEnd);
     }
 
