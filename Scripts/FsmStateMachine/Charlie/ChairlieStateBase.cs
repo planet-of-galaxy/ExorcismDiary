@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public abstract class ChairlieStateBase : StateBase<ChairlieStateBase, ChairlieFsm>
 {
-    protected GameObject player;
     protected Vector3 target;
 
     // 寻找目标相关变量提前声明
@@ -15,8 +14,7 @@ public abstract class ChairlieStateBase : StateBase<ChairlieStateBase, ChairlieF
     private RaycastHit hitInfo;
     private LayerMask mask = ~(1 << 7); // 忽视自己这一层
     protected virtual bool FindTarget() {
-        player = PlayerControllerManager.Instance.GetController();
-        target = player.transform.position;
+        target = MainController.playerTransform.position;
 
         distance = Vector3.Distance(target, agent.transform.position);
         if (distance < 10) {

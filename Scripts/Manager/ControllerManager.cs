@@ -34,4 +34,8 @@ public class ControllerManager : SingletonMono<ControllerManager>
         // IsOnControl需要实现接口的类去更改它的状态
         // current_controller.IsOnControl = true;
     }
+
+    public void Clear() {
+        current_controller = null;
+    }
 }

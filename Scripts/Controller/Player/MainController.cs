@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class MainController : MonoBehaviour, IControlable
+public class MainController : MonoBehaviour, IControlable, ICatchable
 {
     private Camera my_camera;
     // 设置相机安放位置
@@ -33,12 +33,20 @@ public class MainController : MonoBehaviour, IControlable
     private float angle_min = -75f;
     private float angle_max = 75f;
 
+    // 暴露位置
+    public static Transform playerTransform;
+    // 失控
+    private bool isOutOfControl = false;
+    public bool IsOutOfControl => isOutOfControl;
+
     void Awake() {
         // 获取玩家信息
         playerData = PlayerControllerManager.Instance.GetPlayerData(0);
 
         if (characterController == null)
             characterController = gameObject.GetComponent<CharacterController>();
+
+        playerTransform = gameObject.transform;
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -50,6 +58,7 @@ public class MainController : MonoBehaviour, IControlable
     }
 
     void LateUpdate() {
+        if (isOutOfControl) return;
         simulateGravity();
     }
 
@@ -64,9 +73,10 @@ public class MainController : MonoBehaviour, IControlable
         isOnControll = false;
         return my_camera;
     }
-
+     
     public void UpdateControl()
     {
+        if (isOutOfControl) return;
         Move();
         Rotate();
     }
@@ -105,5 +115,17 @@ public class MainController : MonoBehaviour, IControlable
         {
             velocity.y = defualt_speed;
         }
+    }
+
+    public Transform Catched()
+    {
+        EventCenter.Instance.EventTrigger(E_EventType.E_Player_Dead);
+        return transform;
+    }
+
+    public void OutOfControl(bool isOutOfControl) {
+        this.isOutOfControl = isOutOfControl;
+        camPoint.localRotation = Quaternion.identity;
+        camPoint.localPosition = Vector3.zero;
     }
 }

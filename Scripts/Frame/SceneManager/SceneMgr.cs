@@ -19,6 +19,7 @@ public class SceneMgr : Singleton<SceneMgr>
         AudioManager.Instance.Clear();
         EventCenter.Instance.Clear();
         UIManager.Instance.Clear();
+        ControllerManager.Instance.Clear();
         MonoMgr.Instance.Clear();
     }
 }

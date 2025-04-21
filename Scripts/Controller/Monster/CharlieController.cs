@@ -10,6 +10,8 @@ public class CharlieController : MonoBehaviour
     public float move_speed = 6;
     public float speed_scale = 1;
     public ChairlieFsm fsm;
+
+    public Transform catchPoint;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +32,17 @@ public class CharlieController : MonoBehaviour
         if (colliders.Length == 0)
             return;
 
-        colliders[0].transform.GetComponent<PlayerControllerBase>()?.Wound();
+        ICatchable prey = colliders[0].transform.GetComponent<ICatchable>();
+        if (prey == null) return;
+
+        // 先让猎物失控
+        prey.OutOfControl(true);
+        // 把猎物抓起来（获取并操控猎物位置）
+        Transform preyTrans = colliders[0].transform.GetComponent<ICatchable>()?.Catched();
+
+        // 让猎物看着我 狠狠地吓他
+        preyTrans.position = catchPoint.position;
+        preyTrans.rotation = catchPoint.rotation;
     }
 
     private void OnDestroy()
