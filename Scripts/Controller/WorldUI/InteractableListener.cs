@@ -27,8 +27,8 @@ public class InteractableListener : MonoBehaviour
     private float distance;
     // cam到UI的向量 用于计算角度
     private Vector3 direction;
-    // 判断物品是否可被拾取
-    private bool isCanPick = false;
+    // 判断物品是否可被交互
+    private bool isCanInteract = false;
 
     // Start is called before the first frame update
     void Awake()
@@ -68,11 +68,11 @@ public class InteractableListener : MonoBehaviour
         if (distance < MAX_DISTANCE && Vector3.Dot(cam.transform.forward, direction) > 0.95)
         {
             img.sprite = atlas.GetSprite("E");
-            isCanPick = true;
+            isCanInteract = true;
         }
         else {
             img.sprite = atlas.GetSprite("this");
-            isCanPick = false;
+            isCanInteract = false;
         }
     }
 
@@ -87,8 +87,7 @@ public class InteractableListener : MonoBehaviour
     }
 
     private void LisenPickUp() {
-        if (isCanPick && Input.GetKeyDown(KeyCode.E)) {
-            print("物品已被拾取！！");
+        if (isCanInteract && Input.GetKeyDown(KeyCode.E)) {
             source.Interact();
         }
     }
