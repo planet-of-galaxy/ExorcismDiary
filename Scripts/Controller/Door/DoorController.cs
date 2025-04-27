@@ -7,7 +7,8 @@ public class DoorController : MonoBehaviour, IInteractable
     // 交互逻辑
     public string listner_name => "DoorListener";
     // 可交互时 UI所在的位置
-    public Vector3 ui_position => this.transform.position + Vector3.up;
+    private Vector3 uiPosition;
+    public Vector3 ui_position => uiPosition;
 
     // 门的行为
     // 门的开关状态
@@ -21,9 +22,6 @@ public class DoorController : MonoBehaviour, IInteractable
     // 开关门动画协程
     private Coroutine leftDoorCoroutine = null;
     private Coroutine rightDoorCoroutine = null;
-    // 目标四元数
-    Quaternion targetLeftRotation;
-    Quaternion targetRightRotation;
 
     // 交互监听器
     InteractableListener listener = null;
@@ -31,8 +29,16 @@ public class DoorController : MonoBehaviour, IInteractable
     // Start is called before the first frame update
     void Start()
     {
+        // 获取门的transform
         leftDoorTransform = transform.Find("LeftDoor");
         rightDoorTransform = transform.Find("RightDoor");
+
+        // 计算ui位置 根据它是是左侧门还是右侧门进行偏移 如果是双门则在中间
+        uiPosition = transform.position + new Vector3(0, 1.5f, 0);
+        if (leftDoorTransform != null)
+            uiPosition += transform.right;
+        if  (rightDoorTransform != null)
+                uiPosition += -1 * transform.right;
     }
 
     public void Interact()
@@ -44,31 +50,18 @@ public class DoorController : MonoBehaviour, IInteractable
         // 判断玩家是否在门的前面
         bool isFront = direction.y > 0 ? true : false;
 
-        // 计算旋转角度
         if (isOpen)
         {
-            targetLeftRotation = Quaternion.Euler(0, 0, 0);
-            targetRightRotation = Quaternion.Euler(0, 0, 0);
+            OpenDoor(leftDoorTransform, Quaternion.Euler(0,0,0),ref leftDoorCoroutine);
+            OpenDoor(rightDoorTransform, Quaternion.Euler(0, 0, 0), ref rightDoorCoroutine);
             isOpen = false;
         }
-        else if (!isOpen && isFront)
-        {
-            targetLeftRotation = Quaternion.Euler(0, -90, 0);
-            targetRightRotation = Quaternion.Euler(0, 90, 0);
-            isOpen = true;
-        }
         else {
-            targetLeftRotation = Quaternion.Euler(0, 90, 0);
-            targetRightRotation = Quaternion.Euler(0, -90, 0);
+            int flag = isFront ? -1 : 1;
+            OpenDoor(leftDoorTransform, Quaternion.Euler(0, 90 * flag, 0), ref leftDoorCoroutine);
+            OpenDoor(rightDoorTransform, Quaternion.Euler(0, -90 * flag, 0), ref rightDoorCoroutine);
             isOpen = true;
         }
-
-        // 先结束上一个协程
-        if (leftDoorCoroutine != null) StopCoroutine(leftDoorCoroutine);
-        if (rightDoorCoroutine != null) StopCoroutine(rightDoorCoroutine);
-        // 开启新协程
-        leftDoorCoroutine = StartCoroutine(OpenDoorCoroutine(leftDoorTransform, leftDoorTransform.localRotation, targetLeftRotation));
-        rightDoorCoroutine = StartCoroutine(OpenDoorCoroutine(rightDoorTransform, rightDoorTransform.localRotation, targetRightRotation));
     }
 
     void OnTriggerEnter(Collider other)
@@ -94,5 +87,14 @@ public class DoorController : MonoBehaviour, IInteractable
             yield return null;
         }
         myDoor.localRotation = target;
+    }
+
+    private void OpenDoor(Transform door, Quaternion targetRotation, ref Coroutine coroutine) {
+        // 单门情况 会有一个门为null
+        if (door == null) return;
+        // 先结束上一个协程
+        if (coroutine != null) StopCoroutine(coroutine);
+        // 开启新协程
+        coroutine = StartCoroutine(OpenDoorCoroutine(door, door.localRotation, targetRotation));
     }
 }
