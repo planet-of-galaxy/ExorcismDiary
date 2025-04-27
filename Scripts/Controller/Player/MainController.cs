@@ -39,6 +39,9 @@ public class MainController : MonoBehaviour, IControlable, ICatchable
     private bool isOutOfControl = false;
     public bool IsOutOfControl => isOutOfControl;
 
+    // 背包控制
+    private bool isPackageOn = false;
+
     void Awake() {
         // 获取玩家信息
         playerData = PlayerControllerManager.Instance.GetPlayerData(0);
@@ -76,6 +79,7 @@ public class MainController : MonoBehaviour, IControlable, ICatchable
      
     public void UpdateControl()
     {
+        PackageListner();
         if (isOutOfControl) return;
         Move();
         Rotate();
@@ -114,6 +118,28 @@ public class MainController : MonoBehaviour, IControlable, ICatchable
         else
         {
             velocity.y = defualt_speed;
+        }
+    }
+
+    private void PackageListner() {
+        if (Input.GetKeyDown(KeyCode.Q)) {
+            if (isPackageOn)
+            {
+                // 关闭道具面板
+                UIManager.Instance.RemovePanel<PackagePanel>();
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                isPackageOn = false;
+                isOutOfControl = false;
+            }
+            else {
+                // 打开道具面板
+                UIManager.Instance.ShowPanel<PackagePanel>();
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                isPackageOn = true;
+                isOutOfControl = true;
+            }
         }
     }
 
