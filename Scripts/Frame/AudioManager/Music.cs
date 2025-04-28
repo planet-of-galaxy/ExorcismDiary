@@ -32,21 +32,31 @@ public class Music : IPlayable
     public GameObject gameObject; // 附着的游戏物体
     public string name; // 音频名字
     public bool usePool = false; // 是否使用了对象池 默认不使用 该字段仅用于标识 逻辑需手动实现
+    public bool DEBUG_LOG = false;
 
     private Coroutine coroutine; // 音量渐变的协程
 
     public void LoadClipAsync(string ABName)
     {
+        if (DEBUG_LOG)
+            Debug.Log("LoadClipAsync");
+
         play_state = E_PlayState.E_LOADING;
         ABMgr.Instance.LoadResAsync<AudioClip>(ABName, name, LoadClipCallback);
     }
     public void LoadClip(string ABName)
     {
+        if (DEBUG_LOG)
+            Debug.Log("LoadClip");
+
         ABMgr.Instance.LoadRes<AudioClip>(ABName, name);
         play_state = E_PlayState.E_READY;
     }
     public void LoadClipCallback(AudioClip clip)
     {
+        if (DEBUG_LOG)
+            Debug.Log("LoadClipCallback");
+
         if (clip == null) {
             Debug.Log("加载失败！！");
             play_state = E_PlayState.E_NONE;
@@ -60,7 +70,10 @@ public class Music : IPlayable
     // 实现播放接口 直接以设置音量播放
     public void Play()
     {
-        if (audio_type == E_AudioType.E_NONE)
+        if (DEBUG_LOG)
+            Debug.Log("Play");
+
+        if (play_state == E_PlayState.E_NONE)
             return;
 
         // 播放音乐时 关闭背景音乐
@@ -78,7 +91,10 @@ public class Music : IPlayable
     // 实现暂停接口
     public void Pause()
     {
-        if (audio_type == E_AudioType.E_NONE)
+        if (DEBUG_LOG)
+            Debug.Log("Pause");
+
+        if (play_state == E_PlayState.E_NONE)
             return;
 
         play_state = E_PlayState.E_PAUSE;
@@ -94,7 +110,10 @@ public class Music : IPlayable
     // 实现停止接口
     public void Stop()
     {
-        if (audio_type == E_AudioType.E_NONE)
+        if (DEBUG_LOG)
+            Debug.Log("Stop");
+
+        if (play_state == E_PlayState.E_NONE)
             return;
 
         play_state = E_PlayState.E_STOP;
@@ -109,7 +128,10 @@ public class Music : IPlayable
 
     public void GraduallyUpper()
     {
-        if (audio_type == E_AudioType.E_NONE)
+        if (DEBUG_LOG)
+            Debug.Log("GraduallyUpper");
+
+        if (play_state == E_PlayState.E_NONE)
             return;
 
         // 播放音乐时 关闭背景音乐
@@ -130,7 +152,10 @@ public class Music : IPlayable
     // 实现渐出效果
     public void GraduallyLower()
     {
-        if (audio_type == E_AudioType.E_NONE)
+        if (DEBUG_LOG)
+            Debug.Log("GraduallyLower");
+
+        if (play_state == E_PlayState.E_NONE)
             return;
 
         // 如果正在进行音量渐变 那么取消它
@@ -153,6 +178,8 @@ public class Music : IPlayable
             audio_source.mute = isMute;
     }
     public void Clear() {
+        if (DEBUG_LOG)
+            Debug.Log("Clear");
         Stop(); // 先停止播放并关闭协程
         GameObject.Destroy(audio_source); // 销毁AudioSource
         upperCallBack = null;

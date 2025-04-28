@@ -23,6 +23,7 @@ public class BackMusicManager : Singleton<BackMusicManager>
         // 设置状态和类型
         backMusic.play_state = E_PlayState.E_NONE; // 默认无播放状态
         backMusic.audio_type = E_AudioType.E_BACK_MUSIC;  // 设置音频类型
+        backMusic.DEBUG_LOG = true;
         // 实例完成 音频附着物gameObject 音乐源AudioSource 音乐名nam 音乐切片clip等到第一次播放时再添加
     }
 
