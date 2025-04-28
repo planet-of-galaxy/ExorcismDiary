@@ -124,6 +124,8 @@ public class BackMusicManager : Singleton<BackMusicManager>
     /// 它的各个回调函数 附着物体 以及音频类型是不会变的所以只需重置音源的clip
     /// </summary>
     public void Reset() {
+        if (backMusic.play_state == E_PlayState.E_NONE)
+            return;
         // 先停止音乐和协程
         backMusic.Stop();
         // 重置播放状态

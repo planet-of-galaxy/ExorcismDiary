@@ -12,7 +12,7 @@ public abstract class ChairlieStateBase : StateBase<ChairlieStateBase, ChairlieF
     private float cos_angle;
     private float distance;
     private RaycastHit hitInfo;
-    private LayerMask mask = ~(1 << 7); // 忽视自己这一层
+    private LayerMask mask = ~(1 << 7 | 1<<8); // 忽视自己这一层 和 世界UI层
     protected virtual bool FindTarget() {
         target = MainController.playerTransform.position;
 

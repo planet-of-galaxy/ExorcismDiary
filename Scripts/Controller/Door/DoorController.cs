@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class DoorController : MonoBehaviour, IInteractable
 {
@@ -22,6 +23,8 @@ public class DoorController : MonoBehaviour, IInteractable
     // 开关门动画协程
     private Coroutine leftDoorCoroutine = null;
     private Coroutine rightDoorCoroutine = null;
+    // 动态障碍
+    private NavMeshObstacle doorObstacle;
 
     // 交互监听器
     InteractableListener listener = null;
@@ -32,6 +35,8 @@ public class DoorController : MonoBehaviour, IInteractable
         // 获取门的transform
         leftDoorTransform = transform.Find("LeftDoor");
         rightDoorTransform = transform.Find("RightDoor");
+        // 获取动态障碍
+        doorObstacle = GetComponent<NavMeshObstacle>();
 
         // 计算ui位置 根据它是是左侧门还是右侧门进行偏移 如果是双门则在中间
         uiPosition = transform.position + new Vector3(0, 1.5f, 0);
@@ -62,6 +67,8 @@ public class DoorController : MonoBehaviour, IInteractable
             OpenDoor(rightDoorTransform, Quaternion.Euler(0, -90 * flag, 0), ref rightDoorCoroutine);
             isOpen = true;
         }
+        // 开门时关闭动态障碍 关门时打开动态障碍
+        doorObstacle.enabled = !isOpen;
     }
 
     void OnTriggerEnter(Collider other)
