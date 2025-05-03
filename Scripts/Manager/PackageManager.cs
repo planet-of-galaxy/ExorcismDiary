@@ -14,6 +14,10 @@ public class PackageManager : Singleton<PackageManager>
         package.AddProp(id, num);
     }
 
+    public IInPackagable GetPropByID(int id)
+    {
+        return GameDataManager.Instance.GetPropByID(id);
+    }
     public List<IInPackagable> GetProps() {
         return package.GetProps();
     }

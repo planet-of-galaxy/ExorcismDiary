@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PropPanel : MonoBehaviour, IShowItem
@@ -7,6 +8,8 @@ public class PropPanel : MonoBehaviour, IShowItem
     private List<IInPackagable> props;
     public Transform propsContainer;
     private int index = 0; // 当前物品索引
+    public TextMeshProUGUI propName;
+    public TextMeshProUGUI propDescription;
     private void Awake()
     {
         props = PackageManager.Instance.GetProps();
@@ -26,7 +29,9 @@ public class PropPanel : MonoBehaviour, IShowItem
 
     public void ShowItem(int id)
     {
-        throw new System.NotImplementedException();
+        IInPackagable item = PackageManager.Instance.GetPropByID(id);
+        propName.text = item.Name;
+        propDescription.text = item.Description;
     }
 
     private void SetItemPosition(RectTransform rectTransform)
