@@ -19,10 +19,10 @@ public class PropPanel : MonoBehaviour, IShowItem
     {
         foreach (var prop in props)
         {
-            GameObject item = Instantiate(Resources.Load<GameObject>("UI/Item"), propsContainer);
+            GameObject item = Instantiate(Resources.Load<GameObject>("UI/PropItem"), propsContainer);
             item.transform.localScale = Vector3.one;
             item.transform.localPosition = Vector3.zero;
-            item.GetComponent<Item>().Init(prop, this);
+            item.GetComponent<PropItem>().Init(prop, this);
             SetItemPosition(item.transform as RectTransform);
         }
     }

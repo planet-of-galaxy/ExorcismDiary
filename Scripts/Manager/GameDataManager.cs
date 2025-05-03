@@ -7,6 +7,7 @@
 public class GameDataManager : Singleton<GameDataManager>
 {
     private List<ItemProp> props;
+    private List<ItemClub> clubs;
     public override void Init()
     {
 
@@ -20,7 +21,20 @@ public class GameDataManager : Singleton<GameDataManager>
 
         return props[id];
     }
+    public IInPackagable GetClubByID(int id)
+    {
+        if (clubs == null)
+        {
+            LoadClubs();
+        }
+
+        return clubs[id];
+    }
     private void LoadProps() {
         props = JsonMgr.Instance.LoadData<List<ItemProp>>("ItemProp");
+    }
+    private void LoadClubs()
+    {
+        clubs = JsonMgr.Instance.LoadData<List<ItemClub>>("ItemClub");
     }
 }
