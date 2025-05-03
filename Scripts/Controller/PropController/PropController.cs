@@ -5,11 +5,13 @@ public class PropController : MonoBehaviour, IInteractable
     public InteractableListener interactable_listner;
     public Vector3 ui_position { get => transform.position; }
     public string listner_name { get => gameObject.name + "_listner"; }
+    // 重要内容 该道具的ID和数量
+    public int id;
+    public int num;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player") {
-            print("检测到玩家进入");
             interactable_listner = InteractableListnerManager.Instance.CreateInteractableListener(this);
         }
     }
@@ -18,7 +20,6 @@ public class PropController : MonoBehaviour, IInteractable
     {
         if (other.tag == "Player")
         {
-            print("检测到玩家离开");
             if (interactable_listner != null)
             {
                 InteractableListnerManager.Instance.RemoveInteractableListner(interactable_listner);
@@ -28,8 +29,12 @@ public class PropController : MonoBehaviour, IInteractable
     }
     public void Interact()
     {
-        print("物品已经被拾取");
         InteractableListnerManager.Instance.RemoveInteractableListner(interactable_listner);
+        if (num != 0) {
+            PackageManager.Instance.AddProp(id, num);
+            Debug.Log("拾取道具" + id + "数量" + num);
+        }
         Destroy(gameObject);
+        return;
     }
 }

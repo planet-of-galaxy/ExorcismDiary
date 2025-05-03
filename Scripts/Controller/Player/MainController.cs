@@ -41,6 +41,7 @@ public class MainController : MonoBehaviour, IControlable, ICatchable
 
     // 背包控制
     private bool isPackageOn = false;
+    private Package package = new Package(); // 背包
 
     void Awake() {
         // 获取玩家信息
@@ -58,6 +59,7 @@ public class MainController : MonoBehaviour, IControlable, ICatchable
     void Start() {
         // 申请控制权
         ControllerManager.Instance.ChangeController(this);
+
     }
 
     void LateUpdate() {

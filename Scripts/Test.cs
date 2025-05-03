@@ -9,19 +9,6 @@ public class Test : MonoBehaviour
 {
     private void Awake()
     {
-#if UNITY_EDITOR
-        GameObject go = EditorResMgr.Instance.LoadEditorRes<GameObject>("Cube");
-        Instantiate(go);
-#endif
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
