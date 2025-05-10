@@ -2,6 +2,7 @@
 
 public class ControllerManager : SingletonMono<ControllerManager>
 {
+    private IControlable pre_controller;
     private IControlable current_controller;
 
     private void Update()
@@ -27,12 +28,17 @@ public class ControllerManager : SingletonMono<ControllerManager>
         cam.transform.localRotation = Quaternion.identity;
 
         // 调用OnControlEnter 并安置相机
+        pre_controller = current_controller;
         current_controller = controller;
         current_controller.OnControlEnter(cam);
         cam.gameObject.transform.SetParent(current_controller.CameraPoint, false);
 
         // IsOnControl需要实现接口的类去更改它的状态
         // current_controller.IsOnControl = true;
+    }
+
+    public void ComeBackController() {
+        ChangeController(pre_controller);
     }
 
     public void Clear() {
