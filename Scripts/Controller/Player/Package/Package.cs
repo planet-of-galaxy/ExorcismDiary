@@ -24,6 +24,41 @@ public class Package
             Debug.Log("拾取道具" + prop.Name);
         }
     }
+
+    public void ConsumeProp(int id)
+    {
+        int index = foundPropByID(id);
+        if (index != -1) // 如果背包中有该物品
+        {
+            props[index].Num -= 1;
+            Debug.Log(props[index].Name + "道具数量减少" + 1);
+            if (props[index].Num <= 0)
+            {
+                props.RemoveAt(index);
+            }
+        }
+        else // 如果背包中没有该物品
+        {
+            Debug.Log("背包中没有该道具");
+        }
+    }
+
+    public void ConsumeClub(int id)
+    {
+        int index = foundClubByID(id);
+        if (index != -1) // 如果背包中有该物品
+        {
+            clubs[index].Num -= 1;
+            if (clubs[index].Num <= 0)
+            {
+                clubs.RemoveAt(index);
+            }
+        }
+        else // 如果背包中没有该物品
+        {
+            Debug.Log("背包中没有该道具");
+        }
+    }
     public List<IInPackagable> GetProps()
     {
         return props;
@@ -33,7 +68,7 @@ public class Package
     //  如果有，返回物品在背包中的位置
     /// 如果没有，返回-1
     /// </summary>
-    private int foundPropByID(int id) {
+    public int foundPropByID(int id) {
         for (int i = 0;i<props.Count;i++) {
             if (props[i].ID == id)
             {
@@ -72,7 +107,7 @@ public class Package
     //  如果有，返回物品在背包中的位置
     /// 如果没有，返回-1
     /// </summary>
-    private int foundClubByID(int id)
+    public int foundClubByID(int id)
     {
         for (int i = 0; i < clubs.Count; i++)
         {

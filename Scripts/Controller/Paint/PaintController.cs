@@ -8,21 +8,33 @@ public class PaintController : MonoBehaviour, IInteractable
 
     public Vector3 ui_position => this.transform.position;
     private InteractableListener interactable_listner;
-    public GameObject paperMan;
+    private GameObject paperMan;
     public Transform camPoint;
+    public Transform clubPoint;
 
     // 是否在交互中
     private bool isInteracting = false;
 
     public void Interact()
     {
-        print("Interact with PaintController");
-
         // 进入交互
-        if (!isInteracting) {
-            paperMan.GetComponent<PaperManController>().SetCamPoint(camPoint);
-            ControllerManager.Instance.ChangeController(paperMan.GetComponent<PaperManController>() as IControlable);
-            isInteracting = true;
+        if (!isInteracting)
+        {
+            // 先检查背包中是否有纸人
+            if (paperMan != null || PackageManager.Instance.ContainsClub(2))
+            {
+                // 生成纸人
+                if (paperMan == null)
+                    CreatClubMan();
+                paperMan.GetComponent<PaperManController>().SetCamPoint(camPoint);
+                ControllerManager.Instance.ChangeController(paperMan.GetComponent<PaperManController>() as IControlable);
+                isInteracting = true;
+                PackageManager.Instance.ConsumeClub(2); // 消耗纸人
+            }
+            else
+            {
+                UIManager.Instance.ShowHint("似乎缺少什么");
+            }
         }
         // 退出交互
         else
@@ -30,7 +42,6 @@ public class PaintController : MonoBehaviour, IInteractable
             ControllerManager.Instance.ComeBackController();
             isInteracting = false;
         }
-        UIManager.Instance.ShowHint("需要纸人");
     }
 
     private void OnTriggerEnter(Collider other)
@@ -51,5 +62,11 @@ public class PaintController : MonoBehaviour, IInteractable
                 interactable_listner = null;
             }
         }
+    }
+
+    private void CreatClubMan() {
+        paperMan = Instantiate(Resources.Load<GameObject>("Paint/Man"), clubPoint);
+        paperMan.transform.localPosition = Vector3.zero;
+        paperMan.transform.localRotation = Quaternion.identity;
     }
 }

@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class PackageManager : Singleton<PackageManager>
 {
@@ -34,5 +35,28 @@ public class PackageManager : Singleton<PackageManager>
     public List<IInPackagable> GetClubs()
     {
         return package.GetClubs();
+    }
+
+    public bool ContainsProp(int id)
+    {
+        int ret = package.foundPropByID(id);
+
+        return ret == -1 ? false : true;
+    }
+
+    public bool ContainsClub(int id)
+    {
+        int ret = package.foundClubByID(id);
+
+        return ret == -1 ? false : true;
+    }
+    public void ConsumeProp(int id)
+    {
+        package.ConsumeProp(id);
+    }
+
+    public void ConsumeClub(int id)
+    {
+        package.ConsumeClub(id);
     }
 }
