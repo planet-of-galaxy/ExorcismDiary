@@ -8,6 +8,7 @@ public class UIManager : Singleton<UIManager>
     private Dictionary<string, UIBaseController> UIs = new();
     private const string PATH = "UI/";
     private GameObject canvas;
+    private HintController hint;
 
     public void ShowPanel<T>(bool isImmediately = false) where T : UIBaseController
     {
@@ -45,6 +46,14 @@ public class UIManager : Singleton<UIManager>
 
     public void RemovePanelCallBack(UIBaseController ui) {
         GameObject.Destroy(ui.gameObject);
+    }
+
+    public void ShowHint(string message) {
+        if (hint == null)
+        {
+            hint = GameObject.Instantiate(Resources.Load<GameObject>(PATH + "Hint"), canvas.transform).GetComponent<HintController>();
+        }
+        hint.ShowHint(message);
     }
 
     public override void Init()

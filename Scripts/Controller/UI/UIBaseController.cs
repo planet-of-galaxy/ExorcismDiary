@@ -12,7 +12,7 @@ public enum E_UIState {
 }
 public abstract class UIBaseController : MonoBehaviour
 {
-    private CanvasGroup canvas_group;
+    protected CanvasGroup canvas_group;
 
     private float fade_time = 0.5f; // 渐变时间
     private Action<UIBaseController> callback = null; // 渐变结束回调
@@ -28,10 +28,6 @@ public abstract class UIBaseController : MonoBehaviour
     }
 
     protected abstract void Init();
-    void Start()
-    {
-        
-    }
 
     public virtual void ShowMe() {
         ChangeState(E_UIState.E_SHOWING);

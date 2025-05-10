@@ -30,7 +30,7 @@ public class PaintController : MonoBehaviour, IInteractable
             ControllerManager.Instance.ComeBackController();
             isInteracting = false;
         }
-
+        UIManager.Instance.ShowHint("ÐèÒªÖ½ÈË");
     }
 
     private void OnTriggerEnter(Collider other)
