@@ -11,15 +11,22 @@ public class DoorController : MonoBehaviour, IInteractable
     private Vector3 uiPosition;
     public Vector3 ui_position => uiPosition;
 
+    // 所需钥匙 默认-1表示不需要钥匙
+    public int keyID = -1;
+
     // 门的行为
     // 门的开关状态
     private bool isOpen = false;
-    // 门锁的状态
-    private bool isLocked = false;
     // 左侧门的transform
     private Transform leftDoorTransform;
     // 右侧门的transform
     private Transform rightDoorTransform;
+    // 左侧门锁
+    private Transform leftDoorLockTransform;
+    // 右侧门锁
+    private Transform rightDoorLockTransform;
+    // 是否上锁
+    private bool isLocked = false;
     // 开关门动画协程
     private Coroutine leftDoorCoroutine = null;
     private Coroutine rightDoorCoroutine = null;
@@ -35,6 +42,13 @@ public class DoorController : MonoBehaviour, IInteractable
         // 获取门的transform
         leftDoorTransform = transform.Find("LeftDoor");
         rightDoorTransform = transform.Find("RightDoor");
+        // 获取门锁的transform
+        leftDoorLockTransform = transform.Find("LeftDoor/LeftLock");
+        rightDoorLockTransform = transform.Find("RightDoor/RightLock");
+        // 门锁中有一个不为空 那么就是上锁状态
+        if (leftDoorLockTransform != null || rightDoorLockTransform != null) {
+            isLocked = true;
+        }
         // 获取动态障碍
         doorObstacle = GetComponent<NavMeshObstacle>();
 
@@ -54,6 +68,16 @@ public class DoorController : MonoBehaviour, IInteractable
         Vector3 direction = Vector3.Cross(Camera.main.transform.position - transform.position, transform.right);
         // 判断玩家是否在门的前面
         bool isFront = direction.y > 0 ? true : false;
+
+        // 先判断是否上锁
+        if (isLocked) {
+            if (!isFront) {
+                UIManager.Instance.ShowHint("需要从另一侧打开!");
+                return;
+            }
+            Unlock();
+            return;
+        }
 
         if (isOpen)
         {
@@ -103,5 +127,29 @@ public class DoorController : MonoBehaviour, IInteractable
         if (coroutine != null) StopCoroutine(coroutine);
         // 开启新协程
         coroutine = StartCoroutine(OpenDoorCoroutine(door, door.localRotation, targetRotation));
+    }
+
+    // 返回false表示开锁失败 返回true表示开锁成功
+    private bool Unlock() {
+        if (keyID != -1 && !PackageManager.Instance.ContainsClub(keyID)) {
+            UIManager.Instance.ShowHint("需要钥匙!");
+            return false;
+        }
+        // 如果需要钥匙则消耗钥匙
+        if (keyID != -1 && PackageManager.Instance.ContainsClub(keyID))
+        {
+            PackageManager.Instance.ConsumeClub(keyID); // 消耗钥匙
+        }
+        // 销毁门锁
+        if (leftDoorLockTransform != null)
+            Destroy(leftDoorLockTransform.gameObject);
+        if (rightDoorLockTransform != null)
+            Destroy(rightDoorLockTransform.gameObject);
+
+        // 设置为未上锁状态
+        isLocked = false;
+
+        UIManager.Instance.ShowHint("开锁成功!");
+        return true;
     }
 }
