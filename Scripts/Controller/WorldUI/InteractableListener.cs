@@ -22,6 +22,8 @@ public class InteractableListener : MonoBehaviour
     public const float MAX_DISTANCE = 4f;
     // 计算缩放系数
     public const float SCALE_PARAM = 1f/MAX_DISTANCE;
+    // 距离过远销毁
+    public const float DESTORY_DISTANCE = 10f;
 
     // UI大小动态变换参数提前声明
     private float distance;
@@ -41,6 +43,7 @@ public class InteractableListener : MonoBehaviour
 
     void LateUpdate()
     {
+        CheckDistance();
         SetScale();
         SetRotation();
         SetSprite();
@@ -48,8 +51,6 @@ public class InteractableListener : MonoBehaviour
     }
 
     private void SetScale() {
-        // 计算距离
-        distance = Vector3.Distance(transform.position, cam.transform.position);
         // 计算scale
         current_scale = default_scale * distance * SCALE_PARAM;
         if (current_scale.x > 1) {
@@ -89,6 +90,16 @@ public class InteractableListener : MonoBehaviour
     private void LisenPickUp() {
         if (isCanInteract && Input.GetKeyDown(KeyCode.E)) {
             source.Interact();
+        }
+    }
+
+    private void CheckDistance() {
+        // 计算距离
+        distance = Vector3.Distance(transform.position, cam.transform.position);
+        // 如果距离过远 隐藏
+        if (distance > DESTORY_DISTANCE)
+        {
+            Destroy(gameObject);
         }
     }
 
