@@ -11,6 +11,7 @@ public class ControllerManager : SingletonMono<ControllerManager>
     }
 
     public void ChangeController(IControlable controller) {
+        Debug.Log("切换控制器");
         Camera cam;
         if (current_controller != null && current_controller == controller)
             return;
@@ -41,6 +42,10 @@ public class ControllerManager : SingletonMono<ControllerManager>
         ChangeController(pre_controller);
     }
 
+    public IControlable GetCurrentController()
+    {
+        return current_controller;
+    }
     public void Clear() {
         current_controller = null;
     }

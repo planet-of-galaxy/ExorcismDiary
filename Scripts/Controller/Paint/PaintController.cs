@@ -17,6 +17,12 @@ public class PaintController : MonoBehaviour, IInteractable
 
     public void Interact()
     {
+        // 如果是虚拟人物 无法交互画
+        if (ControllerManager.Instance.GetCurrentController() is VirtualPlayerController)
+        {
+            UIManager.Instance.ShowHint("虚拟人无法交互画");
+            return;
+        }
         // 进入交互
         if (!isInteracting)
         {
